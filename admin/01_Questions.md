@@ -1,10 +1,6 @@
 # 1. Platform-Admin Question Register
 
-## Purpose
-
-This page records every distinct platform-admin question considered before dashboard indicators were selected. It is a question inventory, not an evaluation or decision page.
-
-Priorities, data readiness, selection decisions, detailed reasoning, and final placement are documented only in [02_Evaluation.md](./02_Evaluation.md).
+**In one line:** every distinct platform-admin question considered before the dashboard was designed — 67 stable IDs and full questions only. Every decision and reason lives in [02_Evaluation.md](./02_Evaluation.md).
 
 ## How to use this register
 
@@ -16,7 +12,7 @@ Priorities, data readiness, selection decisions, detailed reasoning, and final p
 ## Page contents
 
 - A. Platform growth and store activity (8 questions)
-- B. Platform commerce activity (7 questions)
+- B. Platform commerce activity (8 questions)
 - C. Subscriptions and monetization (11 questions)
 - D. Payment and checkout reliability (6 questions)
 - E. Payouts and bank verification (8 questions)
@@ -53,6 +49,7 @@ These questions examine commerce activity across stores without giving platform 
 | AD-C05 | How many orders expired before payment succeeded? |
 | AD-C06 | Which stores produced the most valid Paid Orders? |
 | AD-C07 | How many orders auto-cancelled because sellers missed decision deadlines? |
+| AD-C08 | What percentage of accepted COD orders failed cash collection? |
 
 ## C. Subscriptions and monetization
 
@@ -156,4 +153,6 @@ These questions examine attack traffic, authentication abuse, suspicious session
 
 ## Register count
 
-**66 distinct questions** are recorded. Every ID appears once with its complete evaluation in `02_Evaluation.md`.
+**67 distinct questions** are recorded. Every ID appears once with its complete evaluation in `02_Evaluation.md`.
+
+AD-C08 was added on 20 July 2026: cash-on-delivery is a first-class Angkoro payment flow, and the original register never asked whether COD collection succeeds — a Cambodia-specific risk the platform must eventually govern.

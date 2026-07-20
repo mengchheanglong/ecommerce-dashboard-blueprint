@@ -83,8 +83,8 @@ Read:
 ### Platform admin
 
 - [`admin/README.md`](admin/README.md) — stakeholder landing page
-- [`admin/01_Questions.md`](admin/01_Questions.md) — strict register of 66 IDs and full questions, including monetization, security, and abuse oversight
-- [`admin/02_Evaluation.md`](admin/02_Evaluation.md) — 66 plain-language evaluations using Decision, Priority, Data, Status, Why, and Dashboard item when selected
+- [`admin/01_Questions.md`](admin/01_Questions.md) — strict register of 67 IDs and full questions, including monetization, security, and abuse oversight
+- [`admin/02_Evaluation.md`](admin/02_Evaluation.md) — verdict tables for all 67 questions plus the seven adopted operating rules (20 July 2026)
 - [`admin/03_Dashboard_Content.md`](admin/03_Dashboard_Content.md) — complete catalog of the 15 approved current items, using the same content template as the business-owner page
 - [`admin/04_Dashboard_Grouping_and_Wireframe.md`](admin/04_Dashboard_Grouping_and_Wireframe.md) — simple grouping, one overview wireframe, and a 15-item display guide
 
@@ -159,11 +159,12 @@ Data readiness and delivery readiness are different. A database field does not p
 
 The current admin dashboard contains 15 items:
 
-1. **Platform and merchant health** — four primary KPIs plus two embedded supporting signals
-2. **Action center** — five urgent administrator queues
-3. **Control and integrity** — four conditional trust/control statuses
+1. **Platform health** — four primary KPIs: Active Paid Stores (with net change), Subscription MRR & Collections, Platform Paid Sales & Orders, and Payment Success Rate
+2. **Growth** — the store activation funnel (created → activated → first paid order)
+3. **Action center** — four SLA-managed administrator queues plus a conditional failed-onboarding alert
+4. **Trust and control** — five conditional statuses, including the new System Status chip
 
-All 66 questions remain evaluated in `02`. Growth/payment maturity, reliability/recovery, security/incidents, and support/governance remain four planned boundaries with explicit reasons rather than 28 additional dashboard widgets.
+All 67 questions remain evaluated in `02`, together with the seven operating rules adopted on 20 July 2026 that unblocked MRR, churn, payment success rate, and queue SLAs. Infrastructure capacity/backups, security/incidents, support/governance, and COD collection failure remain explicit planned boundaries with reasons rather than additional dashboard widgets.
 
 ## Important implementation warning
 

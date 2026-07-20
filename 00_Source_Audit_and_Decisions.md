@@ -259,7 +259,7 @@ Useful ideas retained:
 Scope rejected:
 
 - the historical `0/First_Principles_Redo` proposal of 17 core KPIs, seven Power BI pages, and a star schema before real dashboard usage;
-- the previous admin inventory of 78 questions as an undeduplicated final scope; its useful coverage plus explicit security and operational platform-fee questions is preserved in 66 distinct questions;
+- the previous admin inventory of 78 questions as an undeduplicated final scope; its useful coverage plus explicit security and operational platform-fee questions was preserved in 66 distinct questions (67 after the 20 July 2026 addition of AD-C08, COD cash-collection failure);
 - the previous business-owner inventory of 92 questions as an undeduplicated final scope; its useful coverage is preserved in 60 distinct questions; and
 - refund-centered seller reporting after the explicit product feedback.
 

@@ -1,145 +1,165 @@
 # 3. Platform-Admin Dashboard Content
 
-**Purpose:** Define the 15 items approved for the current platform-admin dashboard in plain language. Selection reasoning is in [02_Evaluation.md](./02_Evaluation.md); layout is in [04_Dashboard_Grouping_and_Wireframe.md](./04_Dashboard_Grouping_and_Wireframe.md).
+**In one line:** the fifteen things on the admin dashboard — and for each one: the decision it supports, how often to check it, what healthy and danger look like, and what to do when it changes.
 
-## Type guide
+Every item follows the decision-driven contract: **a metric earns its place only by connecting to a decision.** Selection reasoning is in [02_Evaluation.md](02_Evaluation.md); layout is in [04_Dashboard_Grouping_and_Wireframe.md](04_Dashboard_Grouping_and_Wireframe.md).
+
+---
+
+## Content types
 
 | Type | Simple meaning |
 |---|---|
-| Primary KPI | Main platform result |
-| Action queue | Work administrators need to handle |
-| Supporting metric | Helps explain a main result |
-| Conditional status | Shows freshness or appears when a control needs attention |
+| Primary KPI | Main platform result for the selected period |
+| Breakdown | Shows the steps or composition behind a result |
+| Action queue | Work administrators must handle, sorted by urgency |
+| Conditional alert | Appears only while a triggering problem exists |
+| Conditional status | A control that stays compact when passing and warns when not |
 
-## Approved dashboard content
+## The dashboard at a glance
 
-| ID | Dashboard item | Type | Placement |
-|---|---|---|---|
-| AD-G02 | Active Paid Stores | Primary KPI | Platform health |
-| AD-S01 | Subscription Collections | Primary KPI | Platform health |
-| AD-C01 | Platform Paid Orders | Primary KPI | Platform health |
-| AD-C02 | Platform Paid Sales | Primary KPI | Platform health |
-| AD-F01 | Payouts Awaiting Processing | Action queue | Attention indicators |
-| AD-F03 | Failed Payouts | Action queue | Attention indicators |
-| AD-F06 | Bank Accounts Awaiting Verification | Action queue | Attention indicators |
-| AD-S07 | Renewals in Grace | Action queue | Attention indicators |
-| AD-F08 | Wallet–Ledger Reconciliation | Conditional status | Trust & control |
-| AD-O06 | Plan Entitlement Integrity | Conditional status | Trust & control |
-| AD-R06 | Dashboard Data Trust | Conditional status | Trust & control |
-| AD-R07 | Source and Financial Reconciliation | Conditional status | Trust & control |
+| # | Item | IDs | Type | The admin asks… |
+|---|---|---|---|---|
+| 1 | **Active Paid Stores** | AD-G02 | Primary KPI | *"Is our paying customer base growing or shrinking?"* |
+| 2 | **Subscription MRR & Collections** | AD-S09 + S01 | Primary KPI | *"How much recurring revenue do we have — and did the cash actually arrive?"* |
+| 3 | **Platform Paid Sales & Orders** | AD-C02 + C01 | Primary KPI | *"How much real commerce is flowing through us?"* |
+| 4 | **Payment Success Rate** | AD-P01 + P02 | Primary KPI | *"When people try to pay, does it work?"* |
+| 5 | **Store Activation Funnel** | AD-G03 + G05 | Breakdown | *"Are new stores actually becoming real businesses?"* |
+| 6 | **Payouts Awaiting Processing** | AD-F01 | Action queue | *"Whose money are we holding, and for how long?"* |
+| 7 | **Failed Payouts** | AD-F03 | Action queue | *"Which payouts broke, and can we recover them?"* |
+| 8 | **Bank Accounts Awaiting Verification** | AD-F06 | Action queue | *"Who is waiting on us before they can get paid?"* |
+| 9 | **Renewals in Grace** | AD-S07 | Action queue | *"Which paying stores are about to slip away?"* |
+| 10 | **Failed Onboarding** | AD-O01 | Conditional alert | *"Did someone's store setup break?"* |
+| 11 | **Wallet–Ledger Reconciliation** | AD-F08 | Conditional status | *"Does every wallet match its ledger?"* |
+| 12 | **Plan Entitlement Integrity** | AD-O06 | Conditional status | *"Is anyone getting features they didn't pay for — or missing ones they did?"* |
+| 13 | **Dashboard Data Trust** | AD-R06 | Conditional status | *"Can I trust the numbers on this screen?"* |
+| 14 | **System Status** | AD-R01 + R02 + R05 | Conditional status | *"Is the platform itself running properly?"* |
+| 15 | **Source & Financial Reconciliation** | AD-R07 | Conditional status | *"Does an independent check agree with this dashboard?"* |
 
-AD-O01 (Failed Onboarding) appears only as a conditional alert when an explicit failure occurs. AD-S03 (First Paid Subscriptions) and AD-G05 (Stores Reaching First Paid Order) remain on the Analytics page.
+## Shared rules
+
+- **Currency:** v1 displays USD; KHR handling awaits the currency policy; currencies are never combined.
+- **Time:** `Asia/Phnom_Penh`; comparisons use the immediately preceding equal-length period.
+- **Missing data:** shows **Stale / Unknown / Not connected** — never zero, never "healthy."
+- **Queues:** close items only by explicit disposition (approve / reject / retry / escalate), recorded with actor, time, and reason.
+- **Actions:** always revalidate current server state; a dashboard snapshot is never trusted for a decision.
+
+---
 
 ## Platform health
 
-### AD-G02 — Active Paid Stores
+### 1. Active Paid Stores — AD-G02
 
-**Type:** Primary KPI · **Placement:** Platform and merchant health  
-**Answers:** How many stores currently have valid paid access?
+- **Decision it supports:** is the paid base growing — do we push acquisition, or fix retention?
+- **Check:** daily.
+- **Card shows:** count + delta vs previous period, with the net-change line **+new − churned** (AD-S03, AD-S10).
+- **Healthy:** net change positive; churn a small share of the base. **Danger:** churn ≥ new for two consecutive periods → treat as a retention incident: read Renewals in Grace, then plan-mix and churn reports before spending anything on acquisition.
 
-**Meaning:** Stores whose current subscription permits paid access, including stores in valid renewal Grace.  
-**Use:** Monitor the usable paid-store base and compare it with the previous period.  
-**Important rule:** Grace remains usable but must also appear in the renewal-risk queue. Do not include every created, trial, expired, suspended, or unpaid store.
+### 2. Subscription MRR & Collections — AD-S09 + AD-S01
 
-### AD-S01 — Subscription Collections
+- **Decision it supports:** can the platform sustain itself — and is committed revenue actually turning into cash?
+- **Check:** MRR weekly; collections daily.
+- **Card shows:** operational MRR (rule 1) with cash collected beneath. The two are never merged: MRR is commitment, collections is cash.
+- **Healthy:** collections track MRR closely. **Danger:** a widening gap between MRR and cash → renewal payments are failing; check Payment Success Rate (subscriptions) and the Grace queue.
 
-**Type:** Primary KPI · **Placement:** Platform and merchant health  
-**Answers:** How much valid subscription cash was collected, by currency?
+### 3. Platform Paid Sales & Orders — AD-C02 + AD-C01
 
-**Meaning:** Valid paid subscription invoices collected during the selected period, separated by currency.  
-**Use:** Monitor actual subscription cash collection beside Active Paid Stores.  
-**Important rule:** This is operational collection data—not finalized accounting revenue, profit, or MRR. Never combine USD and KHR without an approved conversion policy.
+- **Decision it supports:** is merchant commerce growing — is the platform worth paying for?
+- **Check:** daily.
+- **Card shows:** valid paid sales (GMV) with the paid-order count beneath, both with trend.
+- **Healthy:** both move together. **Danger:** sales up while orders flat (concentration risk — check top-store share) or both falling while paid stores hold (stores going quiet — retention risk before it shows in churn). GMV is an input metric: never read it alone as platform health.
 
-### AD-C01 — Platform Paid Orders
+### 4. Payment Success Rate — AD-P01 + AD-P02
 
-**Type:** Primary KPI · **Placement:** Platform and merchant health  
-**Answers:** How many valid Paid Orders occurred across Angkoro?
+- **Decision it supports:** is checkout broken right now — the one failure that hurts every store at once?
+- **Check:** **real-time / every visit** — this is the closest thing the dashboard has to an alarm.
+- **Card shows:** % of terminal payment attempts that succeeded (rule 3), split product / subscription.
+- **Healthy:** stable within its normal band. **Danger:** a sudden drop of a few points → platform emergency: check System Status (webhooks), then provider/method drill-down (AD-P03 when built). A slow drift down → provider or UX degradation worth a week-level investigation.
 
-**Meaning:** Distinct product orders connected to valid customer payments across all stores in the selected period.  
-**Use:** Monitor paid merchant demand and explain movement in Platform Paid Sales.  
-**Important rule:** Count only successful product payments linked to an order with `paidAt`; exclude late captures without it. Use the full platform population, not a limited page of records. COD counts only after confirmed cash collection.
+---
 
-### AD-C02 — Platform Paid Sales
+## Growth
 
-**Type:** Primary KPI · **Placement:** Platform and merchant health  
-**Answers:** What valid Paid Sales occurred across Angkoro, by currency?
+### 5. Store Activation Funnel — AD-G03 + AD-G05
 
-**Meaning:** Valid customer-payment value connected to paid product orders across all stores in the selected period.  
-**Use:** Monitor merchant-commerce value beside Platform Paid Orders.  
-**Important rule:** Use the same valid paid-event rule as Platform Paid Orders. Keep USD and KHR separate. This is not profit, wallet balance, payout value, or finalized accounting revenue.
+- **Decision it supports:** where do new stores get stuck — and is onboarding effort paying off?
+- **Check:** weekly.
+- **Shows:** created → activated → first paid order for the selected period, as three steps with counts. The conversion *rate* (AD-G04) joins when transition history is reliable.
+- **Healthy:** a steady share of created stores reaching first paid order. **Danger:** a step that suddenly narrows → the platform broke something in that step (setup flow, checkout config, payments) — investigate before it shows up as churn.
+
+---
 
 ## Needs attention
 
-### AD-F01 — Payouts Awaiting Processing
+Every queue tile shows: **open count · oldest item age · due-soon count**, sorted closest-to-SLA-breach first, with cleared-this-week as the footer. A count alone hides rot; age and due-soon are the leading indicators.
 
-**Type:** Action queue · **Placement:** Immediate operations  
-**Answers:** Which payout requests await processing?
+### 6. Payouts Awaiting Processing — AD-F01
 
-**Meaning:** Accepted seller payout requests that Angkoro has not yet processed.  
-**Use:** Work oldest requests first and monitor count and value separately by currency.  
-**Important rule:** Do not expose sensitive bank details or combine currencies.
+- **Decision it supports:** process seller money on time — the platform's most direct trust obligation.
+- **Check:** daily, morning.
+- **SLA (rule 4):** 2 business days; due-soon = final 25 % of the window.
+- **Healthy:** oldest item well inside SLA; backlog draining faster than inflow. **Danger:** any breach, or oldest age growing day over day → payouts are rotting; escalate processing capacity today. Never expose full bank details here.
 
-### AD-F03 — Failed Payouts
+### 7. Failed Payouts — AD-F03
 
-**Type:** Action queue · **Placement:** Immediate operations  
-**Answers:** Which payouts failed, and why?
+- **Decision it supports:** recover broken seller payments before they become support tickets and lost trust.
+- **Check:** daily.
+- **SLA:** triage within 24 h — every failure gets a disposition (retry / fix account / escalate), never silence.
+- **Healthy:** zero, with an explicit "0 — all clear" state. **Danger:** repeat failures on the same bank or provider → systemic issue, not seller error; check the provider before retrying individually.
 
-**Meaning:** Failed payout attempts with safe operational reason context.  
-**Use:** Investigate recoverable issues and route authorized recovery actions.  
-**Important rule:** A failure is not proof of fraud or permanent loss. Minimize bank, provider, and seller details.
+### 8. Bank Accounts Awaiting Verification — AD-F06
 
-### AD-F06 — Bank Accounts Awaiting Verification
+- **Decision it supports:** unblock sellers waiting to get paid — verification gates money movement.
+- **Check:** daily.
+- **SLA (rule 5):** review within 1 business day; oldest first (backend needs the oldest-first sort).
+- **Healthy:** queue clears within SLA. **Danger:** growing backlog → sellers can sell but not withdraw, the fastest way to lose merchant trust. Safe details only (last four digits); full reveal requires step-up auth and is audit-logged.
 
-**Type:** Action queue · **Placement:** Immediate operations  
-**Answers:** Which payout bank accounts await verification?
+### 9. Renewals in Grace — AD-S07
 
-**Meaning:** Non-deleted payout bank accounts in the pending-verification state.  
-**Use:** Review oldest pending accounts so valid sellers can become eligible for payouts.  
-**Important rule:** Show only safe details such as the last four digits. Full account-number access requires authorization, step-up protection, and audit logging.
+- **Decision it supports:** save recoverable paying stores before Grace expires.
+- **Check:** daily.
+- **Sort (rule 6):** next expiry first; due-soon = expires within 48 h.
+- **Healthy:** small, stable count with recoveries happening. **Danger:** Grace count climbing while recoveries stall → a renewal-payment problem (check Payment Success Rate), not sixty individual seller problems. Grace is not churn — treat these stores as saveable.
 
-### AD-S07 — Renewals in Grace
+### 10. Failed Onboarding — AD-O01 (conditional alert)
 
-**Type:** Action queue · **Placement:** Immediate operations  
-**Answers:** Which live subscriptions are in renewal Grace?
+- **Decision it supports:** fix a broken store setup the day it breaks.
+- **Check:** appears only when a failure exists — no permanent space.
+- **Healthy:** invisible. **Danger:** repeated failures at the same step → a platform bug in onboarding, not unlucky merchants; route to engineering, not case-by-case retries.
 
-**Meaning:** Stores whose paid subscription remains temporarily usable while renewal recovery is possible.  
-**Use:** Prioritize the next Grace expiry and use the approved renewal-recovery process.  
-**Important rule:** Grace is not churn, immediate expiry, or loss of access.
+---
 
-## Trust and control
+## Trust & control
 
-### AD-F08 — Wallet–Ledger Reconciliation
+These five render as compact status chips with a **"last checked" timestamp** each, and a deliberate all-clear state. A chip never fakes health: a check that didn't run shows **Unknown / Not connected**, not green.
 
-**Type:** Conditional status · **Placement:** Control and integrity; only when mismatched  
-**Answers:** Does every wallet balance reconcile with its ledger?
+### 11. Wallet–Ledger Reconciliation — AD-F08
 
-**Meaning:** Warns when a wallet balance and its supporting ledger entries disagree.  
-**Use:** Keep a passing state compact; show affected wallets and the authorized reconciliation queue when mismatched.  
-**Important rule:** A passing operational comparison is not accounting certification. Never hide missing records, failed checks, or differences behind a healthy state.
+- **Decision it supports:** stop moving money the moment wallets and ledgers disagree.
+- **Check:** continuous check; chip read daily.
+- **Healthy:** passing, with last-checked time. **Danger:** any mismatch → freeze affected payouts first, reconcile second. A passing check is operational comfort, not accounting certification.
 
-### AD-O06 — Plan Entitlement Integrity
+### 12. Plan Entitlement Integrity — AD-O06
 
-**Type:** Conditional status · **Placement:** Control and integrity; only when mismatched  
-**Answers:** Are active plans mapped to the intended features and limits?
+- **Decision it supports:** correct entitlement drift — revenue leaks (features without payment) and trust failures (payment without features).
+- **Check:** chip read daily; warns only on mismatch against the approved plan catalog.
+- **Healthy:** silent/compact. **Danger:** mismatch → fix the entitlement, then find the cause (deploy? manual change?) — never infer intended limits from usage.
 
-**Meaning:** Compares live paid-plan access with the approved feature and limit catalog.  
-**Use:** Warn only when access and configured entitlements disagree.  
-**Important rule:** Do not infer intended limits from observed usage; compare with the approved plan catalog.
+### 13. Dashboard Data Trust — AD-R06
 
-### AD-R06 — Dashboard Data Trust
+- **Decision it supports:** whether to trust *this screen* before acting on it.
+- **Check:** every visit — it sits beside the page heading.
+- **Healthy:** Fresh, recent timestamp. **Danger:** Stale / Partial / Unknown → do not make money or enforcement decisions from affected cards until refreshed.
 
-**Type:** Conditional status · **Placement:** Page freshness and warning state  
-**Answers:** Is dashboard data current, complete, and based on the full population?
+### 14. System Status — AD-R01 + AD-R02 + AD-R05
 
-**Meaning:** Shows whether dashboard data is current, complete, and connected to its sources.  
-**Use:** Show freshness near the page heading and warn before administrators rely on affected content.  
-**Important rule:** Missing, stale, failed, or incomplete data is `Unknown` or `Not connected`—never zero, healthy, or silently omitted.
+- **Decision it supports:** is the platform mechanically working — API, background jobs, payment webhooks?
+- **Check:** every visit; it is the "is anything on fire" chip.
+- **v1 signals:** API error rate (Sentry + liveness), failed/stuck job count, failed/unmatched webhook count. Infrastructure capacity (AD-R03) and backups (AD-R04) show as **Not connected** until integrated — absence of telemetry is never displayed as health.
+- **Healthy:** all facets green with recent checks. **Danger:** failed webhooks climbing → payment/payout state is silently stalling; this often *precedes* a Payment Success Rate drop.
 
-### AD-R07 — Source and Financial Reconciliation
+### 15. Source & Financial Reconciliation — AD-R07
 
-**Type:** Conditional status · **Placement:** Control and integrity; only when affected  
-**Answers:** Do independently recomputed dashboard totals reconcile with authoritative source records and financial ledgers?
-
-**Meaning:** An independent check comparing dashboard totals with authoritative operational and financial records.  
-**Use:** Keep a passing state compact; when it fails, identify the affected section, check time, and failed source.  
-**Important rule:** The dashboard query, cache, or aggregate cannot certify itself. If the independent check is missing, stale, or failed, show `Unknown` or `Not connected`. This remains broader than Wallet–Ledger Reconciliation and does not certify the accounting books.
+- **Decision it supports:** does an independent recomputation agree with what this dashboard claims?
+- **Check:** scheduled check; chip read weekly and before any board-level reporting.
+- **Healthy:** independent check ran recently and matches. **Danger:** mismatch → the affected section's numbers are not reportable until explained. The dashboard cannot certify itself: a missing or stale check shows Unknown / Not connected — never Passed.

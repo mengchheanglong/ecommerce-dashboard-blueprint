@@ -2,98 +2,93 @@
 
 ## Purpose
 
-Help an authorized Angkoro platform administrator answer three simple things:
+Help an authorized Angkoro platform administrator answer four simple things:
 
-1. **Is the paid platform and merchant activity healthy?**
-2. **What work needs administrator attention now?**
-3. **Can the administrator trust the money, entitlements, and dashboard state?**
+1. **Is the paid platform healthy and sustainable?**
+2. **Are new stores becoming real businesses?**
+3. **What work needs administrator attention now?**
+4. **Can the administrator trust the money, entitlements, the system, and this dashboard?**
 
-This page is the presentation view. The complete question register, decision reasoning, dashboard content, planned capability boundaries, and wireframe are linked below.
+This page is the presentation view. The complete question register, decision reasoning, adopted operating rules, dashboard content, planned capability boundaries, and wireframe are linked below.
 
-## Recommended dashboard
+## Recommended dashboard — 15 items
 
-### Platform and merchant health
+### Platform health
 
-| Indicator | Plain-language answer | Why it matters |
+| Indicator | The admin asks | Why it matters |
 |---|---|---|
-| **Active Paid Stores** | How many stores currently have valid paid access | Monitors the usable paid-store base |
-| **Subscription Collections** | How much valid subscription cash Angkoro collected, by currency | Monitors cash collected from paid subscriptions |
-| **Platform Paid Orders** | How many valid paid orders occurred across stores | Shows whether merchants are generating paid demand |
-| **Platform Paid Sales** | How much valid paid commerce occurred, by currency | Monitors merchant-commerce value across the platform |
+| **Active Paid Stores** | Is our paying base growing or shrinking? | Count plus **net change (+new − churned)** — the decomposition turns a vanity count into an acquisition-vs-retention decision |
+| **Subscription MRR & Collections** | How much recurring revenue — and did the cash arrive? | MRR (commitment) and collections (cash) side by side, never merged; a widening gap means renewals are failing |
+| **Platform Paid Sales & Orders** | How much real commerce flows through us? | Merchant-commerce value (GMV) with order volume — an input metric, read with retention in mind |
+| **Payment Success Rate** | When people try to pay, does it work? | The platform's own responsibility metric — a sudden drop is a platform-wide emergency |
+
+### Growth
+
+| Indicator | The admin asks | Why it matters |
+|---|---|---|
+| **Store Activation Funnel** | Are new stores becoming real businesses? | Created → activated → first paid order; shows *where* new stores get stuck |
 
 ### Immediate operations
 
-| Indicator | Plain-language answer | Why it matters |
-|---|---|---|
-| **Payouts Awaiting Processing** | Which seller payouts still need processing | Prioritizes outstanding seller-money obligations |
-| **Failed Payouts** | Which payout attempts failed and why | Routes failed money movement to recovery |
-| **Bank Accounts Awaiting Verification** | Which payout accounts still need review | Unblocks safe seller payouts |
-| **Renewals in Grace** | Which live subscriptions are at recoverable renewal risk | Supports renewal recovery without mislabeling Grace as churn |
-| **Failed Onboarding Operations** | Which explicit onboarding operations failed | Routes failed store setup to retry or investigation |
+All queues show count, **oldest-item age, and due-soon count** against adopted service targets, sorted closest-to-breach first, and close items only by explicit recorded disposition.
 
-### Control and integrity
-
-| Indicator | Plain-language answer | Why it matters |
+| Indicator | The admin asks | Why it matters |
 |---|---|---|
-| **Wallet–Ledger Reconciliation** | Whether wallet balances agree with their ledgers | Detects money-integrity mismatches |
-| **Plan Entitlement Integrity** | Whether paid plans have their intended features and limits | Detects access and configuration mismatches |
-| **Dashboard Data Trust** | Whether dashboard data is fresh, complete, and full-population | Prevents stale or partial data from appearing trustworthy |
-| **Source and Financial Reconciliation** | Whether an independent recomputation agrees with dashboard and authoritative records | Prevents a served aggregate from certifying itself |
+| **Payouts Awaiting Processing** | Whose money are we holding, and for how long? | Seller-money obligations against a 2-business-day target |
+| **Failed Payouts** | Which payouts broke, and can we recover? | Recovery with 24-hour triage; repeat failures reveal systemic issues |
+| **Bank Accounts Awaiting Verification** | Who is waiting on us before they can get paid? | Verification gates money movement; 1-business-day target |
+| **Renewals in Grace** | Which paying stores are about to slip away? | Recoverable renewal risk sorted by next expiry; Grace is not churn |
+| **Failed Onboarding** | Did someone's store setup break? | Conditional alert only while a failure exists |
+
+### Trust and control
+
+Rendered as compact status chips with last-checked timestamps and an explicit all-clear state.
+
+| Indicator | The admin asks | Why it matters |
+|---|---|---|
+| **Wallet–Ledger Reconciliation** | Does every wallet match its ledger? | Money-integrity mismatch stops payouts first, reconciles second |
+| **Plan Entitlement Integrity** | Is anyone getting features they didn't pay for? | Detects entitlement drift in both directions |
+| **Dashboard Data Trust** | Can I trust the numbers on this screen? | Freshness qualifies every other card; shown beside the page heading |
+| **System Status** | Is the platform itself running properly? | API errors, failed jobs, failed webhooks — v1 signals; missing facets show Not connected |
+| **Source & Financial Reconciliation** | Does an independent check agree with this dashboard? | A served aggregate cannot certify itself |
 
 ## One-screen shape
 
 ```text
-[ Active Paid Stores ] [ Collections USD / KHR ]
-[ Paid Orders        ] [ Paid Sales USD / KHR   ]
+[ Active Paid Stores ] [ MRR & Collections ] [ Paid Sales & Orders ] [ Payment Success ]
 
-[ Payouts Waiting ] [ Failed Payouts ] [ Bank Verification ]
-[ Renewals in Grace ] [ Failed Onboarding ]
+[ Store activation funnel: created -> activated -> first paid order ]
 
-[ Data Trust — Fresh / Stale / Partial / Unknown ]
-[ Conditional control alerts appear only when an issue or missing check exists ]
+[ Payouts Waiting ] [ Failed Payouts ] [ Bank Verification ] [ Renewals in Grace ]
+[ Failed Onboarding — only when a failure exists ]
+
+[ Wallet–Ledger ] [ Entitlement ] [ Data Trust ] [ System Status ] [ Reconciliation ]
 ```
 
-The four health indicators and five action queues are not equal cards. Health monitors the platform and queues lead to work. Data Trust remains visible as page-level source context; Wallet–Ledger Reconciliation, Plan Entitlement Integrity, and Source and Financial Reconciliation stay hidden or compact when clear and appear as alerts only for mismatch, affected, stale, unknown, or not-connected states.
-
-## Supporting and conditional content
-
-These explain primary outcomes or appear only when needed; they do not compete as equal headline cards:
-
-- First Paid Subscriptions — supporting context beneath Active Paid Stores
-- Stores Reaching First Paid Order — supporting context beneath merchant health
-- Wallet–Ledger Reconciliation — conditional warning when a mismatch exists
-- Plan Entitlement Integrity — conditional warning when access and configuration disagree
-- Dashboard Data Trust — persistent freshness plus warning states
-- Source and Financial Reconciliation — conditional warning for affected sections
-
-Growth/payment maturity, reliability/recovery, security/incidents, and support/governance remain planned capability boundaries in `02_Evaluation.md`. They are not current dashboard widgets.
+These are not equal cards. Health governs, the funnel explains future health, queues lead to work, and control chips stay compact until something is wrong.
 
 ## Adopted v1 decisions
 
 - **Reporting timezone:** `Asia/Phnom_Penh`
-- **Currency:** Keep USD and KHR separate until Product and Finance approve the rate source, rate timestamp, rounding, and display policy required before any combined total
-- **Current dashboard mode:** Only `Current data` content appears in `03`
-- **Missing data:** Display `Unknown` or `Not connected`, never zero or healthy
-- **Security:** Attack, WAF, anomaly, and incident monitoring remain planned until authoritative telemetry and workflows exist
-- **Privacy:** Minimize user, session, bank, payment, and audit evidence and enforce least privilege
-- **Seller autonomy:** Ordinary seller order decisions remain seller-owned
-
-These are current analytical and placement decisions. Planned capabilities keep their reasons and readiness in `02` without crowding the current dashboard catalog.
+- **Currency:** v1 displays USD; KHR handling awaits the approved currency policy; currencies are never combined
+- **Operating rules (20 July 2026):** seven project-lead rule adoptions — operational MRR, churn event, payment-attempt denominator, payout SLA, verification SLA, grace handling, and queue disposition — are recorded in [02_Evaluation.md](./02_Evaluation.md) and convert previously blocked questions into buildable items
+- **Missing data:** display `Unknown` or `Not connected`, never zero or healthy
+- **Security:** attack, WAF, anomaly, and incident monitoring remain planned until authoritative telemetry and workflows exist
+- **Privacy:** minimize user, session, bank, payment, and audit evidence and enforce least privilege
+- **Seller autonomy:** ordinary seller order decisions remain seller-owned
 
 ## Delivery reality
 
-The product facts support the 15 selected dashboard answers, but the current frontend does not implement this dashboard. Governed aggregates, reconciliation jobs, and the admin overview UI remain build work. Existing guarded payout and bank-account operations mean several action items need safe queue composition and UI integration rather than wholly new backend workflows.
-
-The existing safe paginated bank-verification queue can be reused after adding oldest-first server sorting. The payout workflow has guarded by-ID operations but still needs a platform-wide work queue. AD-R07 cannot display a passing state until an independent reconciliation job exists and completes successfully. Reliability, security, support, and incident capabilities require the dependencies documented in `02` and the shared source audit.
+The current frontend does not implement this dashboard; governed aggregates, the reconciliation job, and the overview UI are build work. The newly adopted items add: an MRR aggregate, a terminal-outcome payment-attempt aggregate, activation funnel counts, SLA age fields on queues, and the three v1 System Status signals (Sentry error rate, failed-job count, failed-webhook count — callback records already exist). The existing safe bank-verification queue is reusable after oldest-first server sorting; payouts still need a platform-wide queue. AD-R07 cannot display a passing state until the independent reconciliation job exists and completes.
 
 No production values were calculated for this document.
 
 ## Documentation map
 
-- [01 — Question register](./01_Questions.md) — all 66 stable IDs and full questions only; no evaluation reasoning
-- [02 — Evaluation and decision record](./02_Evaluation.md) — plain Decision, Priority, Data, Status, Why, and selected dashboard item for every question
-- [03 — Dashboard content](./03_Dashboard_Content.md) — complete catalog of the 15 approved current items
-- [04 — Dashboard grouping and wireframe](./04_Dashboard_Grouping_and_Wireframe.md) — simple grouping, one overview wireframe, and a 15-item display guide
+- [01 — Question register](./01_Questions.md) — all 67 stable IDs and full questions only; no evaluation reasoning
+- [02 — Evaluation and decision record](./02_Evaluation.md) — verdict tables for all 67 questions plus the seven adopted operating rules
+- [03 — Dashboard content](./03_Dashboard_Content.md) — the 15 approved items with decision, cadence, and healthy/danger signals
+- [04 — Dashboard grouping and wireframe](./04_Dashboard_Grouping_and_Wireframe.md) — grouping with reasoning, one overview wireframe, and display-form choices
 - [Shared source audit](../00_Source_Audit_and_Decisions.md) — verified product evidence, external research, and implementation boundaries
 
 The evaluation page is self-contained. A reader does not need to switch to the question inventory to understand any decision.
