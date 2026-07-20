@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Angkoro · Store Dashboard</title>
+<title>Angkoro · Store Overview — River &amp; Reed</title>
 <style>
   :root{
     --bg:#f8faf9; --surface:#fff; --ink:#0b1e17; --muted:#5b6b63;
@@ -12,7 +12,7 @@
     --success:#0b8a5e; --warning:#b45309; --destructive:#c2410c;
     --shadow-card:0 0 0 1px rgba(1,51,38,0.06),0 2px 8px rgba(1,51,38,0.04);
     --shadow-raised:0 0 0 1px rgba(1,51,38,0.08),0 8px 28px rgba(1,51,38,0.08);
-    --radius:6px; --radius-lg:8px;
+    --radius:8px; --radius-sm:6px;
     --font:Inter,system-ui,-apple-system,sans-serif;
   }
   [data-theme="dark"]{
@@ -28,163 +28,200 @@
   body{min-width:320px}
   button,select{font:inherit;cursor:pointer;color:inherit}
   :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+
   .app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
   .sidebar{position:sticky;top:0;height:100vh;background:var(--surface);border-right:1px solid var(--border);padding:12px 8px;display:flex;flex-direction:column;overflow:auto}
-  .brand{display:flex;align-items:center;gap:8px;padding:4px 8px 14px;border-bottom:1px solid var(--border);margin-bottom:8px}
-  .brand-mark{width:26px;height:26px;border-radius:var(--radius);background:var(--primary);color:var(--primary-fg);display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
+  .brand{display:flex;align-items:center;gap:9px;padding:4px 8px 14px;border-bottom:1px solid var(--border);margin-bottom:8px}
+  .brand-mark{width:28px;height:28px;border-radius:var(--radius-sm);background:var(--primary);color:var(--primary-fg);display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
   [data-theme="dark"] .brand-mark{background:var(--accent);color:var(--accent-fg)}
-  .brand b{font-size:13px;font-weight:600;letter-spacing:-.02em}.brand small{display:block;font-size:9.5px;color:var(--muted)}
-  .nav-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:10px 8px 3px;opacity:.65}
+  .brand b{font-size:13.5px;font-weight:600;letter-spacing:-.02em}
+  .brand small{display:block;font-size:10.5px;color:var(--muted)}
+  .nav-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:12px 8px 4px;opacity:.7}
   .nav{display:grid;gap:1px}
-  .nav-btn{display:flex;align-items:center;gap:9px;width:100%;border:0;background:transparent;color:var(--muted);padding:7px 8px;border-radius:5px;font-size:12.5px;font-weight:450;text-align:left;transition:.1s}
+  .nav-btn{display:flex;align-items:center;gap:9px;width:100%;border:0;background:transparent;color:var(--muted);padding:8px;border-radius:var(--radius-sm);font-size:13px;font-weight:450;text-align:left;transition:.1s}
   .nav-btn:hover{background:var(--soft);color:var(--ink)}
   .nav-btn.active{background:rgba(21,192,137,0.1);color:var(--accent);font-weight:550}
-  [data-theme="dark"] .nav-btn.active{color:var(--accent)}
   .nav-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6;flex:none}
-  .nav-badge{margin-left:auto;font-size:9.5px;font-weight:600;border-radius:99px;padding:1.5px 6px;background:rgba(180,83,9,0.12);color:var(--warning)}
-  .side-foot{margin-top:auto;padding:8px 6px 0;border-top:1px solid var(--border);display:flex;gap:7px;align-items:center}
-  .avatar{width:26px;height:26px;border-radius:50%;background:var(--primary);color:var(--primary-fg);display:grid;place-items:center;font-size:9.5px;font-weight:700;flex:none}
-  .side-foot b{font-size:11px}.side-foot span{font-size:9.5px;color:var(--muted)}
+  .nav-badge{margin-left:auto;font-size:10.5px;font-weight:600;border-radius:99px;padding:1px 7px;background:rgba(180,83,9,0.12);color:var(--warning)}
+  .side-foot{margin-top:auto;padding:10px 6px 0;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center}
+  .avatar{width:28px;height:28px;border-radius:50%;background:var(--primary);color:var(--primary-fg);display:grid;place-items:center;font-size:10px;font-weight:700;flex:none}
+  .side-foot b{font-size:12px;display:block}.side-foot span{font-size:10.5px;color:var(--muted);display:block}
+
   main{grid-column:2;min-width:0}
-  .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;padding:9px 20px;background:rgba(248,250,249,0.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;padding:10px 24px;background:rgba(248,250,249,0.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
   [data-theme="dark"] .topbar{background:rgba(8,13,11,0.88)}
-  .btn{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px;border:1px solid var(--border);background:var(--surface);border-radius:5px;font-size:11.5px;font-weight:500;transition:.1s;box-shadow:0 0 0 1px transparent}
+  .btn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border:1px solid var(--border);background:var(--surface);border-radius:var(--radius-sm);font-size:12px;font-weight:500;transition:.1s}
   .btn:hover{border-color:rgba(1,51,38,0.15);background:var(--soft)}
   .btn:disabled{opacity:.35;cursor:not-allowed}
   .btn.primary{background:var(--primary);border-color:var(--primary);color:var(--primary-fg);font-weight:550}
   .btn.primary:hover{background:#0a4636;border-color:#0a4636}
   [data-theme="dark"] .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
   [data-theme="dark"] .btn.primary:hover{background:#10a374;border-color:#10a374}
+  .btn.danger{color:var(--destructive);border-color:rgba(194,65,12,0.3)}
+  .btn.danger:hover{background:rgba(194,65,12,0.06);border-color:rgba(194,65,12,0.45)}
   .btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.7}
+  .icon-btn{padding:0;justify-content:center;width:32px}
   .spacer{flex:1}
-  .content{padding:16px 20px 40px;max-width:1280px}
-  .greet{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px;margin-bottom:12px}
-  .greet h1{font-size:20px;font-weight:650;letter-spacing:-.035em}
-  .greet p{font-size:12px;color:var(--muted);margin-top:2px}
-  .live{color:var(--success);font-weight:600}.mono{font-family:ui-monospace,SFMono-Regular,monospace;font-size:10.5px}
-  .scenario-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-  .scenario-row span{font-size:10px;font-weight:550;color:var(--muted)}
-  .segmented{display:inline-flex;background:var(--soft);border-radius:5px;padding:2px;gap:1px}
-  .segment{border:0;background:transparent;color:var(--muted);font-size:11px;font-weight:500;border-radius:4px;padding:4px 10px;transition:.1s}
+
+  .content{display:flex;flex-direction:column;padding:20px 24px 48px;max-width:1280px}
+  .greet{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px}
+  .greet h1{font-size:21px;font-weight:650;letter-spacing:-.03em}
+  .greet p{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .live{color:var(--success);font-weight:600}
+  .mono{font-family:ui-monospace,SFMono-Regular,monospace;font-size:11px}
+
+  .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .toolbar-label{font-size:11px;font-weight:550;color:var(--muted)}
+  .segmented{display:inline-flex;background:var(--soft);border-radius:var(--radius-sm);padding:2px;gap:1px}
+  .segment{border:0;background:transparent;color:var(--muted);font-size:12px;font-weight:500;border-radius:5px;padding:5px 11px;transition:.1s}
   .segment:hover{color:var(--ink)}
   .segment.active{background:var(--surface);color:var(--ink);font-weight:550;box-shadow:0 0 0 1px rgba(1,51,38,0.06),0 1px 2px rgba(1,51,38,0.04)}
-  .filters{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-  .pill{padding:5px 10px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:11px;font-weight:500;border-radius:99px}
-  .pill.active{background:var(--primary);border-color:var(--primary);color:var(--primary-fg)}
-  [data-theme="dark"] .pill.active{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
-  .freshness{margin-left:auto;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px}
-  .freshness i{width:5px;height:5px;border-radius:50%;background:var(--success)}
-  .alert-banner{display:flex;align-items:center;gap:9px;padding:10px 13px;background:rgba(180,83,9,0.06);border:1px solid rgba(180,83,9,0.2);border-radius:var(--radius);font-size:11.5px;margin-bottom:10px;line-height:1.4}
-  .alert-banner svg{width:15px;height:15px;stroke:var(--warning);fill:none;stroke-width:2;flex:none}
+  .freshness{margin-left:auto;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .freshness i{width:6px;height:6px;border-radius:50%;background:var(--success);flex:none}
+  .freshness i.warn{background:var(--warning)}
+
+  .alert-banner{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:var(--radius);font-size:12px;line-height:1.45;margin-top:12px;background:rgba(180,83,9,0.06);border:1px solid rgba(180,83,9,0.2)}
+  .alert-banner svg{width:16px;height:16px;stroke:var(--warning);fill:none;stroke-width:2;flex:none}
   .alert-banner b{color:var(--warning);font-weight:600}
-  .story{margin-top:18px}
-  .story-head{display:flex;align-items:baseline;justify-content:space-between;gap:6px;margin-bottom:6px}
-  .story-title{font-size:12.5px;font-weight:600;letter-spacing:-.015em}
-  .story-sub{font-size:11px;color:var(--muted)}
-  .story-link{border:0;background:transparent;color:var(--accent);font-size:11px;font-weight:550;display:inline-flex;align-items:center;gap:3px;padding:2px 0}
-  [data-theme="dark"] .story-link{color:var(--accent)}
-  .story-link:hover{opacity:.8}
-  .story-link svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2}
-  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-  .kpi.balance{background:linear-gradient(150deg,var(--surface),color-mix(in srgb,var(--accent) 3%,var(--surface)))}
-  .kpi.aov{background:var(--surface)}
-  .kpi{padding:13px 14px;border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-card)}
-  .kpi .lbl{font-size:10.5px;font-weight:550;color:var(--muted);display:flex;align-items:center;gap:5px}
-  .idtag{font-family:ui-monospace,SFMono-Regular,monospace;font-size:8px;color:var(--muted);border:1px solid var(--border);border-radius:3px;padding:1px 3px;flex:none;margin-left:auto;opacity:.7}
-  .kpi .val{margin-top:5px;font-size:22px;font-weight:700;letter-spacing:-.04em;line-height:1.05}
-  .kpi .val.accent{color:var(--accent)}
-  .kpi .delta{margin-top:4px;font-size:10.5px;display:flex;align-items:center;gap:3px;color:var(--muted)}
-  .kpi .delta b.up{color:var(--success)}.kpi .delta b.down{color:var(--destructive)}
-  .spark{width:100%;height:26px;margin-top:5px;overflow:visible}
-  .queue-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .queue{border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-card);overflow:hidden}
-  .q-head{display:flex;align-items:flex-start;gap:8px;padding:10px 12px}
-  .q-ico{width:26px;height:26px;border-radius:5px;display:grid;place-items:center;flex:none}
-  .q-ico svg{width:13px;height:13px;stroke-width:1.7;fill:none}
+  .alert-link{border:0;background:transparent;color:var(--accent);font-size:12px;font-weight:550;display:inline-flex;align-items:center;gap:3px;padding:0}
+  .alert-link:hover{opacity:.8}
+  .alert-link svg{width:12px;height:12px;stroke:var(--accent);stroke-width:2}
+
+  .story{margin-top:24px}
+  .story-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:10px}
+  .story-title{font-size:13.5px;font-weight:650;letter-spacing:-.015em}
+  .story-sub{font-size:12px;color:var(--muted);margin-top:1px}
+
+  .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .kpi{padding:16px;border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-card);display:flex;flex-direction:column}
+  .kpi .lbl{font-size:12px;font-weight:550;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .kpi .val{margin-top:8px;font-size:26px;font-weight:700;letter-spacing:-.03em;line-height:1.05}
+  .kpi .delta{margin-top:6px;font-size:12px;display:flex;align-items:center;gap:5px;color:var(--muted)}
+  .kpi .delta b{font-weight:600}
+  .kpi .delta b.up{color:var(--success)}
+  .kpi .delta b.down{color:var(--destructive)}
+  .spark{width:100%;height:36px;margin-top:10px;display:block}
+  .chip{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:99px;flex:none;line-height:1.5}
+  .chip.stale{background:rgba(180,83,9,0.1);color:var(--warning)}
+  .chip.off{background:var(--soft);color:var(--muted)}
+  .chip.snap{background:rgba(21,192,137,0.09);color:var(--success)}
+  .kpi.balance{background:linear-gradient(150deg,var(--surface),color-mix(in srgb,var(--accent) 4%,var(--surface)))}
+  .kpi.balance .snap-meta{margin-top:6px;font-size:11.5px;color:var(--muted)}
+  .kpi .card-link{margin-top:auto;padding-top:10px;border:0;background:transparent;color:var(--accent);font-size:12px;font-weight:550;display:inline-flex;align-items:center;gap:4px;align-self:flex-start}
+  .kpi .card-link:hover{opacity:.8}
+  .kpi .card-link svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+
+  .queue-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .queue{border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-card);overflow:hidden;display:flex;flex-direction:column}
+  .q-head{display:flex;align-items:flex-start;gap:9px;padding:13px 14px 11px}
+  .q-ico{width:28px;height:28px;border-radius:var(--radius-sm);display:grid;place-items:center;flex:none}
+  .q-ico svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.7;fill:none}
   .q-ico.warn{background:rgba(180,83,9,0.1);color:var(--warning)}
   .q-ico.crit{background:rgba(194,65,12,0.1);color:var(--destructive)}
-  .q-head h3{font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px;letter-spacing:-.01em}
-  .q-head p{font-size:9.5px;color:var(--muted);margin-top:1px}
-  .q-count{margin-left:auto;text-align:right}
-  .q-count b{font-size:18px;font-weight:700;letter-spacing:-.035em;display:block;line-height:1}
-  .q-rows{list-style:none;padding:0;border-top:1px solid var(--border)}
-  .q-row{display:flex;align-items:center;gap:7px;padding:7px 12px;border-bottom:1px solid var(--border);font-size:11px}
-  .q-row:last-child{border-bottom:0}.q-row:hover{background:var(--soft)}
-  .q-row .t{font-weight:550;font-size:10.5px}.q-row .m{font-size:9px;color:var(--muted);margin-top:1px}
-  .tag{font-size:8px;font-weight:600;padding:1.5px 5px;border-radius:3px;white-space:nowrap;flex:none}
+  .q-head h3{font-size:13px;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;gap:5px}
+  .q-head p{font-size:11px;color:var(--muted);margin-top:1px}
+  .q-count{margin-left:auto;font-size:20px;font-weight:700;letter-spacing:-.03em;line-height:1.2}
+  .q-rows{list-style:none;padding:0;border-top:1px solid var(--border);flex:1}
+  .q-row{display:flex;align-items:center;gap:9px;padding:9px 14px;border-bottom:1px solid var(--border);width:100%;text-align:left;background:none;border-left:0;border-right:0;transition:.1s}
+  button.q-row{border-top:0;cursor:pointer}
+  .q-row:last-child{border-bottom:0}
+  .q-row:hover{background:var(--soft)}
+  .q-row .t{font-weight:550;font-size:12.5px}
+  .q-row .m{font-size:11px;color:var(--muted);margin-top:1px}
+  .tag{font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:4px;white-space:nowrap;flex:none;font-variant-numeric:tabular-nums}
   .tag.crit{background:rgba(194,65,12,0.1);color:var(--destructive)}
   .tag.warn{background:rgba(180,83,9,0.1);color:var(--warning)}
-  .tag.info{background:rgba(21,192,137,0.1);color:var(--accent)}
-  .q-act{margin-left:auto;border:1px solid var(--border);background:var(--surface);font-size:9.5px;font-weight:500;border-radius:4px;padding:3px 7px;flex:none}
+  .tag.neutral{background:var(--soft);color:var(--muted)}
+  .q-act{margin-left:auto;border:1px solid var(--border);background:var(--surface);font-size:11px;font-weight:500;border-radius:5px;padding:4px 9px;flex:none;transition:.1s}
   .q-act:hover{border-color:var(--accent);color:var(--accent)}
-  .q-foot{padding:6px 12px;border-top:1px solid var(--border);font-size:9px;color:var(--muted)}
-  .caught-up{display:flex;gap:9px;align-items:center;padding:10px;background:rgba(11,138,94,0.06);border:1px solid rgba(11,138,94,0.2);border-radius:var(--radius);font-size:11.5px;grid-column:1/-1}
-  .caught-up svg{width:26px;height:26px;border-radius:50%;background:var(--success);color:#fff;padding:5px;flex:none}
-  .attn-badge{display:inline-flex;align-items:center;gap:3px;padding:3.5px 9px;border-radius:99px;font-size:10px;font-weight:550;cursor:pointer;line-height:1}
-  .attn-badge.warn{background:rgba(180,83,9,0.08);color:var(--warning)}
-  .attn-badge.info{background:rgba(37,99,235,0.06);color:var(--info)}
-  .attn-badge.crit{background:rgba(194,65,12,0.06);color:var(--destructive)}
-  .attn-badge svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:1.8;flex:none}
-  .attn-badge b{font-weight:700}
-  .split-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:10px}
-  .panel{padding:12px 13px;border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-card)}
-  .panel h3{font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px;letter-spacing:-.01em}
-  .panel .sub{font-size:9.5px;color:var(--muted);margin-top:1px}
-  .tabs{display:flex;gap:1px;background:var(--soft);border-radius:5px;padding:1.5px;margin-left:auto}
-  .tab{border:0;background:transparent;color:var(--muted);font-size:9.5px;font-weight:500;border-radius:4px;padding:3.5px 7px}
-  .tab.active{background:var(--surface);color:var(--ink);font-weight:550;box-shadow:0 1px 2px rgba(1,51,38,0.04)}
-  .p-row{display:grid;grid-template-columns:20px 1fr 76px 44px;align-items:center;gap:7px;padding:6.5px 0;border-bottom:1px solid var(--border);font-size:10.5px}
-  .p-row:last-child{border-bottom:0}
-  .rank{font-size:9.5px;color:var(--muted);font-family:ui-monospace,monospace}
-  .p-name{font-size:10.5px;font-weight:550}.p-sku{font-size:8.5px;color:var(--muted);margin-top:1px}
-  .bar-track{height:4px;border-radius:99px;background:var(--soft);overflow:hidden}
-  .bar{height:100%;border-radius:99px;background:var(--accent)}
-  .units{font-size:10px;text-align:right;font-weight:600}
-  .aov-val{font-size:18px;font-weight:700;letter-spacing:-.03em;margin-top:6px}
-  .aov-note{font-size:9.5px;color:var(--muted);margin-top:5px;line-height:1.4}
-  .check{display:flex;align-items:center;gap:6px;padding:5.5px 0;border-top:1px solid var(--border);font-size:10px}
-  .check:first-of-type{border-top:0}
-  .check svg{width:13px;height:13px;stroke:var(--success);fill:none;stroke-width:2;flex:none}
-  .check.warn svg{stroke:var(--warning)}
-  .check span:last-child{margin-left:auto;font-size:8.5px;color:var(--muted)}
+  .q-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 14px;border-top:1px solid var(--border);font-size:10.5px;color:var(--muted);background:var(--soft)}
+  .q-foot button{border:0;background:transparent;color:var(--accent);font-size:11px;font-weight:550;padding:0;flex:none}
+  .q-foot button:hover{opacity:.8}
+  .caught-up{display:flex;gap:10px;align-items:center;padding:14px 16px;background:rgba(11,138,94,0.06);border:1px solid rgba(11,138,94,0.2);border-radius:var(--radius);font-size:12.5px;grid-column:1/-1}
+  .caught-up svg{width:28px;height:28px;border-radius:50%;background:var(--success);color:#fff;stroke:currentColor;fill:none;stroke-width:2;padding:6px;flex:none}
+  .panel h3 svg,.setup-card h3 svg{stroke:currentColor;fill:none}
+  .caught-up b{font-weight:600}
+  .caught-up p{font-size:11.5px;color:var(--muted)}
+
+  .split-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:12px;align-items:start}
+  .panel{padding:14px 16px;border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-card)}
+  .panel h3{font-size:13px;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;gap:5px}
+  .panel .sub{font-size:11px;color:var(--muted);margin-top:1px}
+  .aov-val{font-size:22px;font-weight:700;letter-spacing:-.025em;margin-top:10px}
+  .aov-delta{margin-top:5px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px}
+  .aov-delta b.up{color:var(--success)}.aov-delta b.down{color:var(--destructive)}
+  .aov-note{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5;padding-top:8px;border-top:1px solid var(--border)}
+  .p-row{display:grid;grid-template-columns:22px minmax(0,1.2fr) minmax(90px,1fr) 48px;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)}
+  .p-row:last-of-type{border-bottom:0}
+  .rank{font-size:10.5px;color:var(--muted);font-family:ui-monospace,monospace}
+  .p-name{font-size:12.5px;font-weight:550}
+  .p-sku{font-size:10.5px;color:var(--muted);margin-top:1px}
+  .bar-track{height:6px;border-radius:0 4px 4px 0;background:var(--soft);overflow:hidden}
+  .bar{height:100%;border-radius:0 4px 4px 0;background:var(--accent)}
+  .units{font-size:12px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+  .panel-foot{font-size:10.5px;color:var(--muted);margin-top:8px}
+
+  .ready-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--border);font-size:12px}
+  .ready-row:first-of-type{border-top:0}
+  .ready-row svg{width:14px;height:14px;stroke:var(--warning);fill:none;stroke-width:2;flex:none}
+  .ready-row .m{font-size:10.5px;color:var(--muted)}
+  .ready-row .q-act{margin-left:auto}
+  .ready-foot{font-size:11px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:center;gap:5px}
+  .ready-foot svg{width:13px;height:13px;stroke:var(--success);fill:none;stroke-width:2}
+
+  .setup-card{padding:16px;border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-card)}
+  .setup-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--border);font-size:12px}
+  .setup-row:first-of-type{border-top:0;margin-top:8px}
+  .setup-row svg{width:14px;height:14px;stroke:var(--success);fill:none;stroke-width:2;flex:none}
+  .setup-row.todo svg{stroke:var(--warning)}
+  .setup-row span:last-child{margin-left:auto;font-size:10.5px;color:var(--muted)}
+
   .layer{position:fixed;inset:0;z-index:40;display:none}.layer.open{display:block}
   .scrim{position:absolute;inset:0;background:rgba(1,20,12,0.35);backdrop-filter:blur(3px)}
-  .drawer{position:absolute;top:0;right:0;height:100%;width:min(380px,100%);background:var(--surface);border-left:1px solid var(--border);box-shadow:var(--shadow-raised);padding:16px;overflow:auto;animation:slide .15s ease}
+  .drawer{position:absolute;top:0;right:0;height:100%;width:min(400px,100%);background:var(--surface);border-left:1px solid var(--border);box-shadow:var(--shadow-raised);padding:18px;overflow:auto;animation:slide .15s ease}
   @keyframes slide{from{transform:translateX(12px);opacity:.4}to{transform:none;opacity:1}}
-  .drawer h2{font-size:14px;font-weight:650;letter-spacing:-.02em;margin-bottom:1px}
-  .drawer .dsub{font-size:10px;color:var(--muted);margin-bottom:10px}
-  .d-close{float:right;border:1px solid var(--border);background:var(--surface);width:26px;height:26px;border-radius:4px;font-size:12px;color:var(--muted)}
+  .drawer h2{font-size:15px;font-weight:650;letter-spacing:-.02em;margin-bottom:2px}
+  .drawer .dsub{font-size:11.5px;color:var(--muted);margin-bottom:12px}
+  .d-close{float:right;border:1px solid var(--border);background:var(--surface);width:28px;height:28px;border-radius:5px;font-size:13px;color:var(--muted)}
   .d-close:hover{color:var(--ink)}
-  .d-kv{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
-  .d-kv div{border:1px solid var(--border);border-radius:5px;padding:8px}
-  .d-kv span{font-size:8.5px;color:var(--muted);display:block}
-  .d-kv b{font-size:13px;font-weight:650;letter-spacing:-.02em}
-  .d-steps{border-left:1px solid var(--border);margin-top:7px}
-  .d-step{padding:7px 0 7px 20px;position:relative}
-  .d-step:before{content:"";position:absolute;left:-3px;top:11px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
-  .d-step.hold:before{background:var(--warning)}
-  .d-step.bank:before{background:var(--muted)}
-  .d-step b{font-size:11px}.d-step p{font-size:10px;color:var(--muted);margin:1px 0 0;line-height:1.4}
-  .d-actions{display:flex;gap:6px;margin-top:12px}
-  .toast{position:fixed;z-index:60;bottom:16px;left:50%;transform:translate(-50%,140px);background:var(--ink);color:var(--bg);font-size:11.5px;font-weight:550;padding:9px 13px;border-radius:6px;box-shadow:var(--shadow-raised);transition:.2s;pointer-events:none}
+  .d-kv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+  .d-kv div{border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 10px}
+  .d-kv span{font-size:10px;color:var(--muted);display:block}
+  .d-kv b{font-size:13.5px;font-weight:650;letter-spacing:-.01em}
+  .d-items{border:1px solid var(--border);border-radius:var(--radius-sm);margin-top:4px}
+  .d-item{display:flex;justify-content:space-between;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border);font-size:12px}
+  .d-item:last-child{border-bottom:0}
+  .d-item span{color:var(--muted)}
+  .d-steps{border-left:1px solid var(--border);margin-top:8px}
+  .d-step{padding:8px 0 8px 20px;position:relative}
+  .d-step:before{content:"";position:absolute;left:-3px;top:13px;width:6px;height:6px;border-radius:50%;background:var(--warning)}
+  .d-step b{font-size:12px}.d-step p{font-size:11px;color:var(--muted);margin:1px 0 0;line-height:1.45}
+  .d-actions{display:flex;gap:8px;margin-top:14px}
+  .d-note{font-size:10.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+
+  .toast{position:fixed;z-index:60;bottom:18px;left:50%;transform:translate(-50%,140px);background:var(--ink);color:var(--bg);font-size:12.5px;font-weight:550;padding:10px 14px;border-radius:var(--radius-sm);box-shadow:var(--shadow-raised);transition:.2s;pointer-events:none}
   .toast.show{transform:translate(-50%,0)}
   .mobile-menu{display:none}
-  .setup-card{padding:14px;border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-card)}
-  .setup-row{display:flex;align-items:center;gap:7px;padding:7px 0;border-top:1px solid var(--border);font-size:10.5px}
-  .setup-row:first-of-type{border-top:0;margin-top:6px}
-  .setup-row svg{width:13px;height:13px;stroke:var(--success);fill:none;stroke-width:2;flex:none}
-  .setup-row.todo svg{stroke:var(--warning)}
-  .setup-row span:last-child{margin-left:auto;font-size:9px;color:var(--muted)}
-  @media(max-width:1000px){.queue-grid{grid-template-columns:1fr 1fr}.split-grid{grid-template-columns:1fr}}
+
+  @media(max-width:1000px){
+    .queue-grid{grid-template-columns:1fr 1fr}
+    .split-grid{grid-template-columns:1fr}
+    .kpi-grid{grid-template-columns:1fr 1fr}
+    .kpi.balance{grid-column:1/-1}
+  }
   @media(max-width:740px){
     .app{grid-template-columns:1fr}
+    main{grid-column:1}
     .sidebar{position:fixed;z-index:50;width:240px;transform:translateX(-100%);transition:.2s}
     .sidebar.open{transform:none}
     .mobile-menu{display:inline-flex}
-    .content{padding:12px 10px 36px}
-    .topbar{padding:7px 10px}
+    .content{padding:14px 12px 40px}
+    .topbar{padding:8px 12px}
     .kpi-grid,.queue-grid,.split-grid{grid-template-columns:1fr}
     .freshness{margin-left:0;width:100%}
+    .greet{order:0}.toolbar{order:1}.alert-banner{order:2}
+    .story-health{order:4}.story-attn{order:5}.story-support{order:6}.story-ready{order:7}
+    .story-attn.has-work{order:3}
   }
   @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
@@ -196,10 +233,10 @@
 <script>
 (()=>{
 const I={
-  store:'<svg viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9M9 20v-6h6v6"/></svg>',
   dash:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
   orders:'<svg viewBox="0 0 24 24"><path d="M6 3h12l2 4-8 5-8-5zM4 7v11l8 4 8-4V7M12 12v10"/></svg>',
   box:'<svg viewBox="0 0 24 24"><path d="m3 7 9-4 9 4-9 4zM3 7v10l9 4 9-4V7M12 11v10"/></svg>',
+  layers:'<svg viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5zM3 12l9 5 9-5M3 17l9 5 9-5"/></svg>',
   chart:'<svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 16v-4M12 16V7M16 16v-7"/></svg>',
   wallet:'<svg viewBox="0 0 24 24"><path d="M4 7h15a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12M16 13h4"/></svg>',
   settings:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1 2.2-2.1 1.2-1.7-1a7.8 7.8 0 0 1-1.8 1l-.1 2H11l-.9-2a7.8 7.8 0 0 1-1.8-1l-1.7 1-2.1-1.2.1-2.2a8.3 8.3 0 0 1 0-2l-.1-2.2 2.1-1.2 1.7 1a7.8 7.8 0 0 1 1.8-1l.9-2h2l.9 2a7.8 7.8 0 0 1 1.8 1l1.7-1 2.1 1.2-.1 2.2a8.3 8.3 0 0 1 0 2Z"/></svg>',
@@ -210,131 +247,270 @@ const I={
   ext:'<svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4 10 14M9 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3"/></svg>',
   warn:'<svg viewBox="0 0 24 24"><path d="M12 3 2.8 20h18.4zM12 9v4m0 3h.01"/></svg>',
   check:'<svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg>',
-  info:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 11v5"/></svg>',
   menu:'<svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>'
 };
-const state={theme:localStorage.getItem('angkoro-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'),period:'30D',sidebar:false,scenario:'urgent',prodTab:'top',counts:{decide:3,fulfill:4,stock:5}};
-const P={"7D":{usd:1240,orders:31,delta:'8.2%'},"30D":{usd:4860,orders:121,delta:'12.4%'},"90D":{usd:13180,orders:337,delta:'16.8%'}};
-const H={"7D":{usd:420,orders:6,delta:'4.6%'},"30D":{usd:2180,orders:34,delta:'4.6%'},"90D":{usd:6840,orders:112,delta:'5.0%'}};
-const d=()=>state.scenario==='healthy'?H[state.period]:P[state.period];
-const fmt=n=>n.toLocaleString('en-US',{maximumFractionDigits:0}),usd=n=>'$'+fmt(n),usd2=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-function S(c){return`<svg class="spark" viewBox="0 0 120 24" preserveAspectRatio="none" aria-hidden="true"><path d="M0 19 C10 18 14 12 22 15 S36 18 44 12 S56 14 66 9 S80 12 90 8 S104 7 120 3" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round"/></svg>`}
+
+/* ---------------- state + mock data (amounts in cents, USD only for v1) ---------------- */
+const state={
+  theme:localStorage.getItem('angkoro-theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'),
+  period:'30D',sidebar:false,scenario:'urgent',
+  counts:{decide:3,fulfill:4,stock:5},totals:{decide:4,fulfill:5,stock:6}
+};
+const PERIOD_LABEL={'7D':'7 days','30D':'30 days','90D':'90 days'};
+
+/* 12-point series per period; totals derive from the series so numbers always agree */
+const DATA={
+  busy:{
+    '7D':{sales:[15500,18000,16500,19500,17000,20000,15000,21500,18500,16000,22500,24000],prevSales:207000,
+          orders:[2,3,2,3,3,2,3,3,2,3,3,2],prevOrders:29},
+    '30D':{sales:[32000,36500,41000,38000,45500,43000,39500,47000,44500,40000,42500,36500],prevSales:432500,
+          orders:[9,10,11,9,12,10,9,11,10,10,11,9],prevOrders:111},
+    '90D':{sales:[95000,102000,98000,110000,105500,112000,108000,118500,109000,115000,122500,122500],prevSales:1128500,
+          orders:[26,28,27,29,28,30,27,29,28,29,28,28],prevOrders:305}
+  },
+  quiet:{
+    '7D':{sales:[5000,6500,5500,7000,6000,5500,7500,6000,5000,7000,6500,6500],prevSales:76000,
+          orders:[1,0,1,0,1,0,1,0,0,1,0,1],prevOrders:6},
+    '30D':{sales:[17000,18500,16000,19000,18000,17500,19500,18000,17000,19500,18000,20000],prevSales:208500,
+          orders:[3,3,2,3,3,3,3,3,2,3,3,3],prevOrders:33},
+    '90D':{sales:[52000,55000,53500,57000,56000,58000,55500,59000,57500,60000,59500,61000],prevSales:651500,
+          orders:[9,9,10,9,10,9,9,10,9,10,9,9],prevOrders:107}
+  }
+};
+const BALANCE=78000; /* matches Payments page: Available $780.00 */
+const TOP={'7D':[[ '01','Linen Weekend Bag','LN-30',24],['02','Rattan Tray — Large','RT-14',19],['03','Canvas Market Tote','CM-01',15],['04','Sandalwood Candle','SC-09',9],['05','Ceramic Dish — Sand','CD-03',6]],
+  '30D':[['01','Linen Weekend Bag','LN-30',92],['02','Rattan Tray — Large','RT-14',74],['03','Canvas Market Tote','CM-01',57],['04','Sandalwood Candle','SC-09',41],['05','Ceramic Dish — Sand','CD-03',28]],
+  '90D':[['01','Linen Weekend Bag','LN-30',248],['02','Rattan Tray — Large','RT-14',197],['03','Canvas Market Tote','CM-01',161],['04','Sandalwood Candle','SC-09',118],['05','Ceramic Dish — Sand','CD-03',84]]};
+
+const DECIDE=[
+  {id:'ORD-4839',cust:'Dara Chum',amt:6800,method:'Online · prepaid',items:[['Linen Weekend Bag ×1',3200],['Rattan Tray — Large ×2',3600]],left:'38m',sev:'crit',placed:'Today 07:52'},
+  {id:'ORD-4834',cust:'Sokly',amt:2250,method:'COD',items:[['Sandalwood Candle ×1',1400],['Gift Wrap Set ×1',850]],left:'1h 12m',sev:'warn',placed:'Today 06:10'},
+  {id:'ORD-4828',cust:'Lina V.',amt:2900,method:'Online · prepaid',items:[['Canvas Market Tote ×1',2900]],left:'3h 44m',sev:'warn',placed:'Yesterday 22:31'}
+];
+const FULFILL=[
+  {id:'ORD-4817',meta:'2 items · Phnom Penh',age:'2d 4h'},
+  {id:'ORD-4822',meta:'$42.00 · 1 item',age:'1d 6h'},
+  {id:'ORD-4826',meta:'3 items · Siem Reap',age:'18h'}
+];
+const STOCK=[
+  {name:'Canvas Market Tote',meta:'Natural · CM-01',tag:'Out',sev:'crit'},
+  {name:'Sandalwood Candle',meta:'Medium · SC-09',tag:'Out',sev:'crit'},
+  {name:'Rattan Tray — Large',meta:'RT-14 · 3 left',tag:'Low',sev:'warn'}
+];
+
+const sum=a=>a.reduce((x,y)=>x+y,0);
+const money=c=>'$'+(c/100).toLocaleString('en-US',{maximumFractionDigits:0});
+const money2=c=>'$'+(c/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const isDegraded=()=>state.scenario==='degraded';
+const dataset=()=>state.scenario==='healthy'?DATA.quiet[state.period]:DATA.busy[state.period];
+
+function deltaHtml(cur,prev,label){
+  if(!prev)return`<span>no previous-period data</span>`;
+  const p=(cur-prev)/prev*100;
+  if(Math.abs(p)<0.05)return`<b>—</b><span>flat vs prev ${label}</span>`;
+  const up=p>0;
+  return`<b class="${up?'up':'down'}">${up?'↑':'↓'} ${Math.abs(p).toFixed(1)}%</b><span>vs prev ${label}</span>`;
+}
+/* 2px line + 10% area wash, drawn from the real series */
+function spark(series){
+  const w=280,h=36,p=4,min=Math.min(...series),max=Math.max(...series),r=(max-min)||1;
+  const pts=series.map((v,i)=>[p+i*(w-2*p)/(series.length-1),h-p-((v-min)/r)*(h-2*p)]);
+  const line=pts.map((pt,i)=>(i?'L':'M')+pt[0].toFixed(1)+' '+pt[1].toFixed(1)).join('');
+  const area=line+`L${pts[pts.length-1][0].toFixed(1)} ${h-1}L${pts[0][0].toFixed(1)} ${h-1}Z`;
+  return`<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+    <path d="${area}" fill="var(--accent)" opacity=".1"/>
+    <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>`;
+}
+
+/* ---------------- shell ---------------- */
 function nav(id,label,ico,badge){return`<button class="nav-btn ${id==='overview'?'active':''}" data-nav="${id}">${I[ico]}<span>${label}</span>${badge?`<b class="nav-badge">${badge}</b>`:''}</button>`}
-function sidebar(){return`<aside class="sidebar ${state.sidebar?'open':''}">
-  <div class="brand"><div class="brand-mark">${I.store}</div><div><b>Store Dashboard</b><small>River & Reed · ${state.scenario==='new'?'setup':'live'}</small></div></div>
-  <div class="nav-label">Workspace</div><div class="nav">${nav('overview','Overview','dash')}${nav('orders','Orders','orders',state.counts.decide||'')}${nav('products','Products','box')}${nav('inventory','Inventory','box',state.counts.stock||'')}</div>
-  <div class="nav-label">Insights</div><div class="nav">${nav('analytics','Analytics','chart')}${nav('payments','Payments','wallet')}</div>
+function sidebar(){const c=state.counts;return`<aside class="sidebar ${state.sidebar?'open':''}">
+  <div class="brand"><div class="brand-mark">RR</div><div><b>River &amp; Reed</b><small>river-reed.telestore.app</small></div></div>
+  <div class="nav-label">Workspace</div><div class="nav">${nav('overview','Overview','dash')}${nav('orders','Orders','orders',c.decide||'')}${nav('products','Products','box')}${nav('inventory','Inventory','layers',c.stock||'')}</div>
+  <div class="nav-label">Insights</div><div class="nav">${nav('analytics','Analytics','chart')}${nav('payments','Payments','wallet')}${nav('settings','Settings','settings')}</div>
   <div class="side-foot"><div class="avatar">LM</div><div><b>Long Mengchheang</b><span>Owner</span></div></div></aside>`}
 function topbar(){return`<header class="topbar">
-  <button class="btn mobile-menu" data-act="menu" aria-label="Menu" style="padding:0;justify-content:center;width:30px">${I.menu}</button>
+  <button class="btn icon-btn mobile-menu" data-act="menu" aria-label="Menu">${I.menu}</button>
   <div class="spacer"></div>
   <button class="btn" data-act="view-store">${I.ext}View Store</button>
-  <button class="btn" data-act="theme" aria-label="Theme" style="padding:0;justify-content:center;width:30px">${state.theme==='dark'?I.sun:I.moon}</button>
-  <button class="btn" data-act="notif" aria-label="Notifications" style="padding:0;justify-content:center;width:30px;position:relative">${I.bell}${state.scenario==='urgent'?'<span style="position:absolute;top:4px;right:5px;width:5px;height:5px;border-radius:50%;background:var(--warning)"></span>':''}</button></header>`}
-function greet(){let sub=state.scenario==='new'?'Complete setup before relying on performance analytics.':state.scenario==='healthy'?'All quiet — no orders or inventory need immediate action.':'Urgent order decisions, fulfillment backlog, and inventory issues need attention.';
-  return`<div class="greet"><div><h1>${new Date().getHours()<12?'Good morning':new Date().getHours()<18?'Good afternoon':'Good evening'}</h1><p>River & Reed is <span class="live">${state.scenario==='new'?'in setup':'live'}</span> at <span class="mono">river-reed.telestore.app</span> · ${sub}</p></div>
-  ${state.scenario==='new'?'':attentionStrip()}</div>`}
-function scenarioCtl(){return`<div class="scenario-row"><span>Store state</span><div class="segmented" role="group" aria-label="Store state">${['new','healthy','urgent'].map(s=>`<button class="segment ${state.scenario===s?'active':''}" data-scenario="${s}">${s[0].toUpperCase()+s.slice(1)}</button>`).join('')}</div></div>`}
-function kpiRow(){let x=d();return`<div class="kpi-grid">
-  <article class="kpi"><div class="lbl">Paid Sales<span class="idtag">BO-S01</span></div><div class="val accent">${usd(x.usd)}</div><div class="delta"><b class="up">↑ ${x.delta}</b>vs matched previous period</div>${S('var(--accent)')}</article>
-  <article class="kpi"><div class="lbl">Paid Orders<span class="idtag">BO-S02</span></div><div class="val">${fmt(x.orders)}</div><div class="delta"><b class="up">↑ 9.1%</b>vs previous period</div>${S('#4e7cc2')}</article>
-  <article class="kpi aov"><div class="lbl">Avg Paid Order Value<span class="idtag">BO-S04</span></div><div class="val">${usd2(x.usd/x.orders)}</div><div class="delta">Paid Sales ÷ Paid Orders · explains whether orders grew larger or smaller</div></article>
-  <article class="kpi balance" style="cursor:pointer" data-act="open-finance"><div class="lbl">Available Balance<span class="idtag">BO-M01</span></div><div class="val">$780</div><div class="delta" style="color:var(--success)">As of now · Open Finance →</div></article>
-</div>`}
-function alertBanner(){if(state.scenario==='healthy')return'';return`<div class="alert-banner">${I.warn}<div><b>2 setup issues need attention</b> — your store can't accept payouts. <button class="story-link" data-act="readiness">Fix now${I.arrow}</button></div></div>`}
-function qHead(ico,cls,title,sub,count,id){return`<div class="q-head"><div class="q-ico ${cls}">${I[ico]}</div><div><h3>${title}<span class="idtag">${id}</span></h3><p>${sub}</p></div><div class="q-count"><b>${count}</b></div></div>`}
-function queues(){let c=state.counts;return`<div class="queue-grid">
-  <article class="queue">${qHead('orders','warn','Orders Need Decision','Nearest deadline first',c.decide,'BO-O01')}
-    <ul class="q-rows">
-      <li class="q-row"><span class="tag crit">38m</span><div><div class="t">ORD-4839 · Dara Chum</div><div class="m">$68.00 · Online</div></div><button class="q-act" data-act="accept">Accept</button></li>
-      <li class="q-row"><span class="tag warn">1h 12m</span><div><div class="t">ORD-4834 · Sokly</div><div class="m">$22.50 · COD</div></div><button class="q-act" data-act="accept">Accept</button></li>
-      <li class="q-row"><span class="tag warn">3h 44m</span><div><div class="t">ORD-4828 · Lina V.</div><div class="m">$29.00 · Online</div></div><button class="q-act" data-act="accept">Accept</button></li>
-    </ul>
-    <div class="q-foot">Paid prepaid awaiting acceptance + COD awaiting decision.</div></article>
-  <article class="queue">${qHead('box','crit','Fulfillment Backlog','Oldest accepted prepaid first',c.fulfill,'BO-F01')}
-    <ul class="q-rows">
-      <li class="q-row"><span class="tag crit">2d 4h</span><div><div class="t">ORD-4817</div><div class="m">2 items · Phnom Penh</div></div><button class="q-act" data-act="fulfill">Fulfill</button></li>
-      <li class="q-row"><span class="tag info">1d 6h</span><div><div class="t">ORD-4822</div><div class="m">$42.00 · Prepaid</div></div><button class="q-act" data-act="fulfill">Fulfill</button></li>
-      <li class="q-row"><span class="tag info">18h</span><div><div class="t">ORD-4826</div><div class="m">3 items · Prepaid</div></div><button class="q-act" data-act="fulfill">Fulfill</button></li>
-    </ul>
-    <div class="q-foot">Age shown · not overdue until a fulfillment SLA is adopted.</div></article>
-  <article class="queue">${qHead('warn','crit','Inventory Attention','Out of Stock first, then Low Stock',c.stock,'BO-I05')}
-    <ul class="q-rows">
-      <li class="q-row"><span class="tag crit">OOS</span><div><div class="t">Canvas Market Tote</div><div class="m">Natural · CM-01</div></div><button class="q-act" data-act="restock">Restock</button></li>
-      <li class="q-row"><span class="tag crit">OOS</span><div><div class="t">Sandalwood Candle</div><div class="m">Medium · SC-09</div></div><button class="q-act" data-act="restock">Restock</button></li>
-      <li class="q-row"><span class="tag warn">Low·3</span><div><div class="t">Rattan Tray</div><div class="m">Large · RT-14</div></div><button class="q-act" data-act="restock">Restock</button></li>
-    </ul>
-    <div class="q-foot">Low = 1–5 available (v1 warning, not a demand forecast).</div></article>
-</div>`}
-function attentionStrip(){let c=state.counts;
-  return`<div style="display:flex;align-items:center;gap:0;font-size:10.5px">
-    <span style="display:inline-flex;align-items:center;gap:4px;padding:0 10px 0 0;border-right:1px solid var(--border);cursor:pointer;color:${c.decide>0?'var(--warning)':'var(--muted)'}" data-act="go-decide"><b style="font-size:13px;font-weight:700">${c.decide}</b><span style="color:var(--muted);font-weight:450">to decide</span></span>
-    <span style="display:inline-flex;align-items:center;gap:4px;padding:0 10px;border-right:1px solid var(--border);cursor:pointer;color:${c.fulfill>0?'var(--warning)':'var(--muted)'}" data-act="go-fulfill"><b style="font-size:13px;font-weight:700">${c.fulfill}</b><span style="color:var(--muted);font-weight:450">to fulfill</span></span>
-    <span style="display:inline-flex;align-items:center;gap:4px;padding:0 0 0 10px;cursor:pointer;color:${c.stock>0?'var(--destructive)':'var(--muted)'}" data-act="go-stock"><b style="font-size:13px;font-weight:700">${c.stock}</b><span style="color:var(--muted);font-weight:450">stock items</span></span>
-  </div>`}
-const top=[['01','Linen Weekend Bag','LN-30',92,100],['02','Rattan Tray — Large','RT-14',74,80],['03','Canvas Market Tote','CM-01',57,62],['04','Sandalwood Candle','SC-09',41,45]];
-const attn=[['01','Dried Palm Vase','PV-12','Live 42d · 0 paid units'],['02','Gift Wrap Set','GW-04','Live 31d · 0 paid units'],['03','Ceramic Dish — Sand','CD-03','Live 21d · 0 paid units']];
-function products(){let isTop=state.prodTab==='top';
-  let rows=isTop?top.map(p=>`<div class="p-row"><span class="rank">${p[0]}</span><div><div class="p-name">${p[1]}</div><div class="p-sku">${p[2]}</div></div><div class="bar-track"><div class="bar" style="width:${p[4]}%"></div></div><div class="units">${p[3]}</div></div>`).join('')
-    :attn.map(p=>`<div class="p-row"><span class="rank">${p[0]}</span><div><div class="p-name">${p[1]}</div><div class="p-sku">${p[2]}</div></div><div style="font-size:9.5px;color:var(--muted)">${p[3]}</div><button class="q-act" data-act="prod-review">Review</button></div>`).join('');
-  return`<article class="panel"><div style="display:flex;align-items:center;gap:6px"><div><h3>Top Products<span class="idtag">BO-I01</span></h3><div class="sub">Ranked by paid units · ${state.period}</div></div>
-    <div class="tabs"><button class="tab ${isTop?'active':''}" data-ptab="top">Top</button><button class="tab ${!isTop?'active':''}" data-ptab="attention">Attention</button></div></div>
-    <div style="margin-top:6px">${rows}</div>
-    <div style="font-size:9px;color:var(--muted);margin-top:5px">${isTop?'Paid units ≠ Paid Sales, profit, or demand forecast.':'Active, visible, in-stock items with zero paid units — safer than "worst sellers."'}</div></article>`}
-function readiness(){let ok=state.scenario==='healthy';let checks=[['Store active',true],['Sellable product',true],['Checkout configured',true],['Payout bank account',ok],['Telegram notifications',ok],['Contact & fulfillment',true]];
-  if(ok)return`<div class="panel" style="margin-top:10px"><h3 style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:16px;flex:none">${I.check}</span><span style="color:var(--success)">Store Readiness</span><span class="idtag">BO-R01–R06</span></h3><div class="sub">All checks passing.</div></div>`;
-  return`<div class="panel" style="margin-top:10px"><h3 style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:16px;flex:none">${I.warn}</span><span style="color:var(--warning)">Store Readiness</span><span class="idtag">BO-R01–R06</span></h3>
-  ${checks.map(c=>`<div class="check ${c[1]?'':'warn'}" style="margin-top:2px">${c[1]?I.check:I.warn}<span>${c[0]}</span><span>${c[1]?'Ready':'Fix now'}</span></div>`).join('')}</div>`}
-function setupView(){let steps=[['Store active',true],['Sellable product',false],['Checkout configured',false],['Payout bank verified',false],['Telegram enabled',false],['Contact & fulfillment',false]];
-  return`<section class="story"><div class="story-head"><h2 class="story-title">Store setup</h2></div>
-  <div class="setup-card"><div style="display:flex;align-items:center;gap:7px;margin-bottom:6px"><div class="q-ico warn">${I.warn}</div><div><h3 style="font-size:12px;font-weight:600">Store Readiness<span class="idtag">BO-R01–R06</span></h3><div class="sub">1 of 6 complete</div></div></div>
+  <button class="btn icon-btn" data-act="theme" aria-label="Toggle theme">${state.theme==='dark'?I.sun:I.moon}</button>
+  <button class="btn icon-btn" data-act="notif" aria-label="Notifications" style="position:relative">${I.bell}${state.counts.decide?'<span style="position:absolute;top:5px;right:6px;width:5px;height:5px;border-radius:50%;background:var(--warning)"></span>':''}</button></header>`}
+
+function greet(){
+  const h=new Date().getHours(),g=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
+  const sub=state.scenario==='new'?'Complete setup before relying on performance analytics.':`River &amp; Reed is <span class="live">live</span> at <span class="mono">river-reed.telestore.app</span>`;
+  return`<div class="greet"><div><h1>${g}</h1><p>${sub}</p></div></div>`}
+
+function toolbar(){
+  const fresh=isDegraded()
+    ?`<span class="freshness"><i class="warn"></i>Partial — last refresh 09:12 (3h ago) · Asia/Phnom_Penh</span>`
+    :`<span class="freshness"><i></i>Updated 2 min ago · Asia/Phnom_Penh</span>`;
+  return`<div class="toolbar">
+    <span class="toolbar-label">Prototype state</span>
+    <div class="segmented" role="group" aria-label="Prototype state">${['new','healthy','urgent','degraded'].map(s=>`<button class="segment ${state.scenario===s?'active':''}" data-scenario="${s}" aria-pressed="${state.scenario===s}">${s[0].toUpperCase()+s.slice(1)}</button>`).join('')}</div>
+    ${state.scenario==='new'?'':fresh}</div>`}
+
+function banner(){
+  if(state.scenario==='urgent')return`<div class="alert-banner">${I.warn}<div><b>2 setup issues need attention</b> — your store can’t receive payouts. <button class="alert-link" data-act="readiness">Fix now ${I.arrow}</button></div></div>`;
+  if(isDegraded())return`<div class="alert-banner">${I.warn}<div><b>Some data couldn’t be refreshed.</b> Paid Sales and Paid Orders show the last values from 09:12. Available Balance is not connected — missing data is never shown as zero.</div></div>`;
+  return''}
+
+/* ---------------- business health ---------------- */
+function kpiRow(){
+  const x=dataset(),sales=sum(x.sales),orders=sum(x.orders),pl=PERIOD_LABEL[state.period],deg=isDegraded();
+  const staleChip=deg?`<span class="chip stale">Stale · 3h</span>`:'';
+  const balance=deg
+    ?`<article class="kpi balance"><div class="lbl">Available Balance</div>
+       <div class="val" style="color:var(--muted)">—</div>
+       <div class="snap-meta"><span class="chip off">Not connected</span></div>
+       <button class="card-link" data-act="open-finance">Open Finance ${I.arrow}</button></article>`
+    :`<article class="kpi balance"><div class="lbl">Available Balance</div>
+       <div class="val">${money2(BALANCE)}</div>
+       <div class="snap-meta"><span class="chip snap">Snapshot</span> As of ${new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})} · not period-scoped</div>
+       <button class="card-link" data-act="open-finance">Open Finance ${I.arrow}</button></article>`;
+  return`<div class="kpi-grid">
+    <article class="kpi"><div class="lbl">Paid Sales ${staleChip}</div>
+      <div class="val">${money(sales)}</div>
+      <div class="delta">${deltaHtml(sales,x.prevSales,pl)}</div>${spark(x.sales)}</article>
+    <article class="kpi"><div class="lbl">Paid Orders ${staleChip}</div>
+      <div class="val">${orders.toLocaleString('en-US')}</div>
+      <div class="delta">${deltaHtml(orders,x.prevOrders,pl)}</div>${spark(x.orders)}</article>
+    ${balance}</div>`}
+
+function healthSection(){
+  return`<section class="story story-health"><div class="story-head">
+    <div><h2 class="story-title">Business health</h2><div class="story-sub">Valid paid business in the selected period · USD</div></div>
+    <div class="segmented" role="group" aria-label="Period">${['7D','30D','90D'].map(p=>`<button class="segment ${state.period===p?'active':''}" data-period="${p}" aria-pressed="${state.period===p}">${p}</button>`).join('')}</div>
+  </div>${kpiRow()}</section>`}
+
+/* ---------------- needs attention ---------------- */
+function qHead(ico,cls,title,sub,count,id){return`<div class="q-head"><div class="q-ico ${cls}">${I[ico]}</div><div><h3>${title}</h3><p>${sub}</p></div><span class="q-count">${count}</span></div>`}
+function attnSection(){
+  const c=state.counts,t=state.totals,work=c.decide+c.fulfill+c.stock>0;
+  let body;
+  if(!work){
+    body=`<div class="queue-grid"><div class="caught-up">${I.check}<div><b>All caught up.</b><p>No order decisions, fulfillment work, or inventory issues right now.</p></div></div></div>`;
+  }else{
+    body=`<div class="queue-grid">
+    <article class="queue">${qHead('orders','warn','Orders Need Decision','Nearest deadline first',c.decide,'BO-O01')}
+      <ul class="q-rows">${DECIDE.slice(0,c.decide).map((o,i)=>`<li><button class="q-row" data-order="${i}"><span class="tag ${o.sev}">${o.left}</span><div><div class="t">${o.id} · ${o.cust}</div><div class="m">${money2(o.amt)} · ${o.method}</div></div><span class="q-act">Review</span></button></li>`).join('')}</ul>
+      <div class="q-foot"><span>Paid prepaid + COD awaiting your decision.</span><button data-act="go-decide">View all ${t.decide} ${'→'}</button></div></article>
+    <article class="queue">${qHead('box','warn','Fulfillment Backlog','Oldest accepted prepaid first',c.fulfill,'BO-F01')}
+      <ul class="q-rows">${FULFILL.slice(0,Math.min(c.fulfill,3)).map(o=>`<li class="q-row"><span class="tag neutral">${o.age}</span><div><div class="t">${o.id}</div><div class="m">${o.meta}</div></div><button class="q-act" data-act="fulfill">Fulfill</button></li>`).join('')}</ul>
+      <div class="q-foot"><span>Age shown — not “overdue” until a fulfillment target exists.</span><button data-act="go-fulfill">View all ${t.fulfill} ${'→'}</button></div></article>
+    <article class="queue">${qHead('warn','crit','Inventory Attention','Out of stock first, then low stock',c.stock,'BO-I05')}
+      <ul class="q-rows">${STOCK.slice(0,Math.min(c.stock,3)).map(o=>`<li class="q-row"><span class="tag ${o.sev}">${o.tag}</span><div><div class="t">${o.name}</div><div class="m">${o.meta}</div></div><button class="q-act" data-act="restock">Restock</button></li>`).join('')}</ul>
+      <div class="q-foot"><span>Low = 1–5 available units (v1 rule, not a forecast).</span><button data-act="go-stock">View all ${t.stock} ${'→'}</button></div></article>
+    </div>`;
+  }
+  return`<section class="story story-attn ${work?'has-work':''}"><div class="story-head">
+    <div><h2 class="story-title">Needs attention</h2><div class="story-sub">Work to act on now — each queue opens the related workflow.</div></div>
+  </div>${body}</section>`}
+
+/* ---------------- supporting ---------------- */
+function supportSection(){
+  const x=dataset(),sales=sum(x.sales),orders=sum(x.orders),pl=PERIOD_LABEL[state.period];
+  const aov=orders?sales/orders:null,prevAov=x.prevOrders?x.prevSales/x.prevOrders:null;
+  const max=Math.max(...TOP[state.period].map(p=>p[3]));
+  return`<section class="story story-support"><div class="story-head">
+    <div><h2 class="story-title">Supporting detail</h2><div class="story-sub">Explains the business-health result for the same period.</div></div></div>
+  <div class="split-grid">
+    <article class="panel"><h3>Avg Paid Order Value</h3><div class="sub">Paid Sales ÷ Paid Orders · last ${pl}</div>
+      <div class="aov-val">${aov==null?'—':money2(aov)}</div>
+      <div class="aov-delta">${aov==null?'<span>No paid orders in this period</span>':(prevAov?deltaHtml(aov,prevAov,pl):'<span>no previous-period data</span>')}</div>
+      <div class="aov-note">Shows whether Paid Sales moved because orders grew larger or smaller — read beside Paid Sales and Paid Orders, not as a headline.</div></article>
+    <article class="panel"><h3>Top Products</h3><div class="sub">Ranked by valid paid units · last ${pl}</div>
+      <div style="margin-top:8px">${TOP[state.period].map(p=>`<div class="p-row"><span class="rank">${p[0]}</span><div><div class="p-name">${p[1]}</div><div class="p-sku">${p[2]}</div></div><div class="bar-track"><div class="bar" style="width:${Math.round(p[3]/max*100)}%"></div></div><div class="units">${p[3]}</div></div>`).join('')}</div>
+      <div class="panel-foot">Paid units ≠ Paid Sales, profit, or a demand forecast.</div></article>
+  </div></section>`}
+
+/* ---------------- readiness (conditional: failing checks only) ---------------- */
+function readySection(){
+  if(state.scenario!=='urgent')return'';
+  return`<section class="story story-ready"><div class="story-head">
+    <div><h2 class="story-title">Store readiness</h2><div class="story-sub">Only unresolved setup checks are shown.</div></div></div>
+  <article class="panel"><h3><span style="color:var(--warning);display:inline-flex;width:15px">${I.warn}</span>2 checks need attention</h3>
+    <div style="margin-top:8px">
+      <div class="ready-row">${I.warn}<div><div>Payout bank account not verified</div><div class="m">Payouts are blocked until verification completes.</div></div><button class="q-act" data-act="readiness">Fix</button></div>
+      <div class="ready-row">${I.warn}<div><div>Telegram notifications disconnected</div><div class="m">You may miss order-decision deadlines without alerts.</div></div><button class="q-act" data-act="readiness">Fix</button></div>
+    </div>
+    <div class="ready-foot">${I.check}4 other checks passing — store active, sellable product, checkout, contact &amp; fulfillment.</div></article></section>`}
+
+/* ---------------- new-store setup ---------------- */
+function setupView(){
+  const steps=[['Store active',true],['Add a sellable product',false],['Configure checkout',false],['Verify payout bank account',false],['Connect Telegram notifications',false],['Complete contact & fulfillment settings',false]];
+  return`<section class="story"><div class="story-head"><div><h2 class="story-title">Store setup</h2><div class="story-sub">Finish these steps before performance analytics are meaningful.</div></div></div>
+  <div class="setup-card"><div style="display:flex;align-items:center;gap:8px"><div class="q-ico warn">${I.warn}</div><div><h3 style="font-size:13px;font-weight:600">Store Readiness</h3><div style="font-size:11px;color:var(--muted)">1 of 6 complete</div></div></div>
   ${steps.map(c=>`<div class="setup-row ${c[1]?'':'todo'}">${c[1]?I.check:I.warn}<span>${c[0]}</span><span>${c[1]?'Done':'Required'}</span></div>`).join('')}
   <div class="d-actions"><button class="btn primary" data-act="fix-start">Continue setup</button></div></div></section>`}
+
+/* ---------------- view + render ---------------- */
 function view(){
-  let body;
-  if(state.scenario==='new'){body=setupView()}
-  else {
-    const hl=`<section class="story"><div class="story-head"><div><h2 class="story-title">Business health</h2><div class="story-sub">Valid paid business in the selected period.</div></div><div class="segmented" role="group" aria-label="Period">${['7D','30D','90D'].map(p=>`<button class="segment ${state.period===p?'active':''}" data-period="${p}" ${state.scenario==='new'?'disabled':''}>${p}</button>`).join('')}</div></div>${kpiRow()}</section>`;
-    const expl=`<section class="story"><div class="story-head"><h2 class="story-title">Top products</h2></div>${products()}</section>`;
-    const ready=`<section class="story"><div class="story-head"><h2 class="story-title">Store readiness</h2></div>${readiness()}</section>`;
-    body=hl+expl+ready;
-  }
-  return`${topbar()}<div class="content">${greet()}${scenarioCtl()}${alertBanner()}${body}</div>`;
-}
+  const body=state.scenario==='new'
+    ?setupView()
+    :healthSection()+attnSection()+supportSection()+readySection();
+  return`${topbar()}<div class="content">${greet()}${toolbar()}${banner()}${body}</div>`}
 function render(){document.documentElement.dataset.theme=state.theme;document.getElementById('root').innerHTML=`<div class="app">${sidebar()}<main>${view()}</main></div>`;bind()}
-function toast(t){let e=document.getElementById('toast');e.textContent=t;e.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>e.classList.remove('show'),2000)}
-function openDrawer(k){
-  let b=k==='readiness'?{t:'Fix Store Readiness',s:'2 checks need attention',body:`<div class="d-steps"><div class="d-step hold"><b>Verify payout bank account</b><p>Open Payments — full details never show on Overview.</p></div><div class="d-step hold"><b>Reconnect Telegram notifications</b><p>Order alerts disabled; reconnect so you never miss a decision deadline.</p></div></div><div class="d-actions"><button class="btn primary" data-act="fix-start">Start setup</button></div>`}:null;
-  if(!b)return;
-  document.getElementById('layer-root').innerHTML=`<div class="layer open"><div class="scrim" data-close></div><aside class="drawer" role="dialog" aria-modal="true"><button class="d-close" data-close>✕</button><h2>${b.t}</h2><div class="dsub">${b.s}</div>${b.body}</aside></div>`;
-  document.querySelectorAll('[data-close]').forEach(x=>x.onclick=()=>document.getElementById('layer-root').innerHTML='');
-  document.querySelectorAll('.drawer [data-act]').forEach(x=>x.onclick=()=>{document.getElementById('layer-root').innerHTML='';act(x.dataset.act)});
+
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>e.classList.remove('show'),2200)}
+
+/* ---------------- drawer (focus-managed) ---------------- */
+let lastFocus=null;
+function closeDrawer(){document.getElementById('layer-root').innerHTML='';if(lastFocus){lastFocus.focus();lastFocus=null}}
+function openDrawer(html){
+  lastFocus=document.activeElement;
+  document.getElementById('layer-root').innerHTML=`<div class="layer open"><div class="scrim" data-close></div><aside class="drawer" role="dialog" aria-modal="true">${html}</aside></div>`;
+  const root=document.getElementById('layer-root');
+  root.querySelectorAll('[data-close]').forEach(x=>x.onclick=closeDrawer);
+  root.querySelectorAll('[data-act]').forEach(x=>x.onclick=()=>{const a=x.dataset.act;closeDrawer();act(a)});
+  const c=root.querySelector('.d-close');if(c)c.focus();
+}
+function orderDrawer(i){
+  const o=DECIDE[i];if(!o)return;
+  openDrawer(`<button class="d-close" data-close aria-label="Close">✕</button>
+    <h2>${o.id}</h2><div class="dsub">${o.cust} · placed ${o.placed}</div>
+    <div class="d-kv"><div><span>Amount</span><b>${money2(o.amt)}</b></div><div><span>Payment</span><b>${o.method}</b></div>
+    <div><span>Decision deadline</span><b style="color:${o.sev==='crit'?'var(--destructive)':'var(--warning)'}">${o.left} left</b></div><div><span>Items</span><b>${o.items.length}</b></div></div>
+    <div class="d-items">${o.items.map(it=>`<div class="d-item"><span>${it[0]}</span><b>${money2(it[1])}</b></div>`).join('')}</div>
+    <div class="d-actions"><button class="btn primary" data-act="open-in-orders" style="flex:1;justify-content:center">Accept / Reject in Orders ${I.arrow}</button></div>
+    <div class="d-note">This is a read-only preview. Missing the deadline auto-cancels the order — the decision itself happens in the Orders workflow, which revalidates current server state.</div>`)
+}
+function readinessDrawer(){
+  openDrawer(`<button class="d-close" data-close aria-label="Close">✕</button>
+    <h2>Fix Store Readiness</h2><div class="dsub">2 checks need attention</div>
+    <div class="d-steps"><div class="d-step"><b>Verify payout bank account</b><p>Complete verification in Payments — full bank details never appear on the Overview.</p></div>
+    <div class="d-step"><b>Reconnect Telegram notifications</b><p>Order alerts are disabled; reconnect so you never miss a decision deadline.</p></div></div>
+    <div class="d-actions"><button class="btn primary" data-act="fix-start">Start setup</button></div>`)
+}
+
+/* ---------------- actions ---------------- */
+function applyScenario(){
+  if(state.scenario==='healthy'||state.scenario==='new'){state.counts={decide:0,fulfill:0,stock:0};state.totals={decide:0,fulfill:0,stock:0}}
+  else{state.counts={decide:3,fulfill:4,stock:5};state.totals={decide:4,fulfill:5,stock:6}}
 }
 function act(a){
   if(a==='theme'){state.theme=state.theme==='dark'?'light':'dark';localStorage.setItem('angkoro-theme',state.theme);return render()}
   if(a==='menu'){state.sidebar=!state.sidebar;return render()}
-  if(a==='notif')return toast(state.scenario==='urgent'?'3 order decisions + 2 setup checks':'No urgent items');
+  if(a==='notif')return toast(state.counts.decide?`${state.counts.decide} order decisions waiting`:'No urgent items');
   if(a==='view-store')return toast('Opens your live storefront');
-  if(a==='open-finance')return toast('Opens Finance page — full money lifecycle');
-  if(a==='readiness')return openDrawer('readiness');
+  if(a==='open-finance')return toast('Opens Finance — full money lifecycle (pending, escrow, payouts)');
+  if(a==='readiness')return readinessDrawer();
   if(a==='fix-start')return toast('Setup workflow opened');
-  if(a==='go-decide'){state.counts.decide=Math.max(0,state.counts.decide-1);render();return toast('Nearest deadline first')}
-  if(a==='go-fulfill'){state.counts.fulfill=Math.max(0,state.counts.fulfill-1);render();return toast('Oldest accepted first')}
-  if(a==='go-stock'){state.counts.stock=Math.max(0,state.counts.stock-1);render();return toast('Out of stock first')}
-  if(a==='accept'){state.counts.decide=Math.max(0,state.counts.decide-1);render();return toast('Order accepted')}
-  if(a==='fulfill'){state.counts.fulfill=Math.max(0,state.counts.fulfill-1);render();return toast('Order fulfilled')}
-  if(a==='restock')return toast('Restock task created');
-  if(a==='prod-review')return toast('Listing review opened');
+  if(a==='go-decide')return toast('Opens Orders — nearest deadline first');
+  if(a==='go-fulfill')return toast('Opens Orders — oldest accepted first');
+  if(a==='go-stock')return toast('Opens Inventory — out of stock first');
+  if(a==='open-in-orders')return toast('Opens Orders — this order focused for accept/reject');
+  if(a==='fulfill')return toast('Opens Orders — fulfillment workflow for this order');
+  if(a==='restock')return toast('Opens Inventory — restock workflow for this item');
 }
 function bind(){
-  document.querySelectorAll('[data-act]').forEach(x=>x.onclick=()=>act(x.dataset.act));
-  document.querySelectorAll('[data-ptab]').forEach(x=>x.onclick=()=>{state.prodTab=x.dataset.ptab;render()});
-  document.querySelectorAll('[data-scenario]').forEach(x=>x.onclick=()=>{state.scenario=x.dataset.scenario;applyS();render()});
-  document.querySelectorAll('[data-period]').forEach(x=>x.onclick=()=>{if(state.scenario==='new')return;state.period=x.dataset.period;render()});
+  document.querySelectorAll('[data-act]').forEach(x=>x.onclick=e=>{e.stopPropagation();act(x.dataset.act)});
+  document.querySelectorAll('[data-order]').forEach(x=>x.onclick=()=>orderDrawer(+x.dataset.order));
+  document.querySelectorAll('[data-scenario]').forEach(x=>x.onclick=()=>{state.scenario=x.dataset.scenario;applyScenario();render()});
+  document.querySelectorAll('[data-period]').forEach(x=>x.onclick=()=>{state.period=x.dataset.period;render()});
   document.querySelectorAll('[data-nav]').forEach(x=>x.onclick=()=>{if(x.dataset.nav==='overview')return;toast(`Go to ${x.textContent.trim()}`)});
 }
-function applyS(){if(state.scenario==='healthy'||state.scenario==='new')state.counts={decide:0,fulfill:0,stock:0};else state.counts={decide:3,fulfill:4,stock:5}}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('layer-root').innerHTML=''});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
 render();
 })();
 </script>

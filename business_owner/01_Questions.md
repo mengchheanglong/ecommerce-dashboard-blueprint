@@ -1,8 +1,6 @@
 # 1. Business-Owner Question Register
 
-## Purpose
-
-This page records every distinct business-owner question considered before dashboard indicators were selected. It is a question inventory, not an evaluation or decision page.
+**In one line:** every distinct business-owner question considered before the dashboard was designed — 60 stable IDs and full questions only. Every decision and reason lives in [02_Evaluation.md](02_Evaluation.md).
 
 ## Page contents
 

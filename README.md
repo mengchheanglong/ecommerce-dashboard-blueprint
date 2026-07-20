@@ -76,8 +76,8 @@ Read:
 - [`business_owner/README.md`](business_owner/README.md) — stakeholder landing page
 - [`business_owner/01_Questions.md`](business_owner/01_Questions.md) — strict register of 60 IDs and full questions; no evaluation reasoning
 - [`business_owner/02_Evaluation.md`](business_owner/02_Evaluation.md) — 60 plain-language evaluations using Decision, Priority, Data, Status, Why, and Dashboard item when selected
-- [`business_owner/03_Dashboard_Content.md`](business_owner/03_Dashboard_Content.md) — eight approved dashboard items classified by content type, meaning, use, and guardrail
-- [`business_owner/04_Dashboard_Grouping_and_Wireframe.md`](business_owner/04_Dashboard_Grouping_and_Wireframe.md) — simple grouping, one overview wireframe, and an eight-item display guide
+- [`business_owner/03_Dashboard_Content.md`](business_owner/03_Dashboard_Content.md) — nine approved dashboard items classified by content type, meaning, use, and guardrail
+- [`business_owner/04_Dashboard_Grouping_and_Wireframe.md`](business_owner/04_Dashboard_Grouping_and_Wireframe.md) — grouping with reasoning, one overview wireframe, and a nine-item display guide
 
 
 ### Platform admin
@@ -141,18 +141,19 @@ Data readiness and delivery readiness are different. A database field does not p
 
 1. **Paid Sales** — Valid product-payment value in the selected period, with matched comparison
 2. **Paid Orders** — Distinct valid paid orders in the same period
+3. **Available Balance** — Withdrawable wallet money right now (current snapshot, never period-scoped)
 
 ### Immediate operations
 
-3. **Orders Need Decision** — Open accept/reject work, nearest deadline first
-4. **Fulfillment Backlog** — Accepted prepaid orders still needing fulfillment
-5. **Inventory Attention** — Out of Stock at 0 or below; Low Stock at 1–5 available tracked units
+4. **Orders Need Decision** — Open accept/reject work, nearest deadline first
+5. **Fulfillment Backlog** — Accepted prepaid orders still needing fulfillment
+6. **Inventory Attention** — Out of Stock at 0 or below; Low Stock at 1–5 available tracked units
 
 ### Supporting and conditional content
 
-6. **Average Paid Order Value** — Supporting explanation for Paid Sales and Paid Orders
-7. **Top Products** — Ranked breakdown by valid paid units
-8. **Store Readiness** — Conditional setup checklist for new or blocked stores
+7. **Average Paid Order Value** — Supporting explanation for Paid Sales and Paid Orders
+8. **Top Products** — Ranked breakdown by valid paid units
+9. **Store Readiness** — Conditional setup checklist for new or blocked stores
 
 ## Current platform-admin dashboard content
 

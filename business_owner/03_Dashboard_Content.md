@@ -1,122 +1,109 @@
 # 3. Business-Owner Dashboard Content
 
-## Type guide
+**In one line:** the nine things on the dashboard, what each one means, and how to read each one safely.
+
+Every item answers one question from [02_Evaluation.md](02_Evaluation.md). Layout and display choices live in [04_Dashboard_Grouping_and_Wireframe.md](04_Dashboard_Grouping_and_Wireframe.md).
+
+---
+
+## Content types
 
 | Type | Simple meaning |
 |---|---|
-| Primary KPI | Main business result |
-| Current finance snapshot | Money available right now — not a period performance metric |
-| Action queue | Work that needs attention |
+| Primary KPI | Main business result for the selected period |
+| Current finance snapshot | Money available right now — not a period metric |
+| Action queue | Work that needs attention, sorted by urgency |
 | Supporting metric | Helps explain a main result |
 | Breakdown | Ranks or divides a result |
-| Conditional status | Appears only when a condition needs attention |
+| Conditional status | Appears only when something needs attention |
 
-## Approved dashboard content
+## The dashboard at a glance
 
-| ID | Dashboard item | Type | Placement |
-|---|---|---|---|
-| BO-S01 | Paid Sales | Primary KPI | Business health |
-| BO-S02 | Paid Orders | Primary KPI | Business health |
-| BO-M01 | Available Balance | Current finance snapshot | Business health |
-| BO-O01 | Orders Need Decision | Action queue | Immediate operations |
-| BO-F01 | Fulfillment Backlog | Action queue | Immediate operations |
-| BO-I05 | Inventory Attention | Action queue | Immediate operations |
-| BO-S04 | Average Paid Order Value | Supporting metric | Beneath business health |
-| BO-I01 | Top Products | Breakdown | Beneath business health |
-| BO-R01–R06 | Store Readiness | Conditional status | Only when setup is incomplete or blocked |
+| # | Item | ID | Type | Answers in one line |
+|---|---|---|---|---|
+| 1 | **Paid Sales** | BO-S01 | Primary KPI | How much did customers actually pay this period? |
+| 2 | **Paid Orders** | BO-S02 | Primary KPI | How many orders became valid paid orders? |
+| 3 | **Available Balance** | BO-M01 | Current finance snapshot | How much money can I withdraw right now? |
+| 4 | **Orders Need Decision** | BO-O01 | Action queue | Which orders must I accept or reject before their deadline? |
+| 5 | **Fulfillment Backlog** | BO-F01 | Action queue | Which accepted paid orders still need fulfillment? |
+| 6 | **Inventory Attention** | BO-I05 | Action queue | Which items are out of stock or running low? |
+| 7 | **Avg Paid Order Value** | BO-S04 | Supporting metric | Did orders get bigger or smaller? |
+| 8 | **Top Products** | BO-I01 | Breakdown | Which products sold the most paid units? |
+| 9 | **Store Readiness** | BO-R01–R06 | Conditional status | Is unfinished setup blocking my store? |
+
+## Shared rules for every item
+
+- **Currency:** v1 displays **USD**. KHR display waits for the currency-policy decision (Product + Finance). Currencies are **never combined** into one total.
+- **Time:** all periods use `Asia/Phnom_Penh`; comparisons use the immediately preceding equal-length period.
+- **Freshness:** the dashboard always shows when data was last updated. Missing or failed data shows **Stale**, **Unknown**, or **Not connected** — never zero, and never "healthy."
+- **Actions:** every action revalidates current server state; the dashboard snapshot is never trusted for a decision.
+
+---
 
 ## Business health
 
-### BO-S01 — Paid Sales
+### 1. Paid Sales — BO-S01
 
-**Type:** Primary KPI · **Placement:** Business health  
-**Answers:** What was valid Paid Sales in the selected period, by currency?
+- **In plain words:** the money customers actually paid for valid orders in the selected period, shown with a trend and a previous-period comparison.
+- **Use it to:** see whether real paid business is rising or falling — always read beside Paid Orders.
+- **Rules that keep it honest:** counts only successful payments linked to an order marked paid (`paidAt`); late captures on cancelled/expired orders are excluded; COD counts **only after confirmed cash collection**; it is gross paid business before refunds — **not** profit, wallet balance, or accounting revenue.
 
-**Meaning:** The value of valid customer payments connected to paid product orders in the selected period.  
-**Use:** Check whether real paid business is rising, falling, or absent. Read it beside Paid Orders and the previous-period comparison.  
-**Important rule:** Count only successful product payments linked to an order with `paidAt`; exclude late captures without it. COD counts only after confirmed cash collection. Keep currencies separate. This is gross paid business before later refunds or reversals—not profit, wallet balance, payout value, or finalized accounting revenue—and it should link to authorized Finance details.
+### 2. Paid Orders — BO-S02
 
-### BO-S02 — Paid Orders
+- **In plain words:** how many distinct orders produced the Paid Sales above — same period, same valid-payment population.
+- **Use it to:** tell whether a sales change came from **more orders** or **bigger orders**.
+- **Rules that keep it honest:** never counts created orders or checkout attempts; a paid order stays counted after later lifecycle changes; COD counts only after confirmed cash collection.
 
-**Type:** Primary KPI · **Placement:** Business health  
-**Answers:** How many distinct Paid Orders were recorded?
+### 3. Available Balance — BO-M01
 
-**Meaning:** The number of distinct orders connected to valid customer payments in the same period as Paid Sales.  
-**Use:** Read it beside Paid Sales to see whether movement came from order volume or order value.  
-**Important rule:** Use the same valid paid population as Paid Sales. Do not count every created order or checkout attempt. A paid order remains counted after later lifecycle changes; COD counts only after confirmed cash collection.
+- **In plain words:** the wallet money that can be withdrawn **right now**. A snapshot with a timestamp — not a period result.
+- **Use it to:** decide whether to request a payout; the card links to the Finance page for the full picture.
+- **Rules that keep it honest:** the period selector never applies to it; no trend, no percent change; it is not profit and not Paid Sales (pending settlement, escrow, and COD cash held by the seller explain the difference — all detailed on Finance).
 
-### BO-M01 — Available Balance
-
-**Type:** Current finance snapshot · **Placement:** Business health
-**Answers:** How much store money is currently available for payout?
-
-**Meaning:** The authorized wallet amount currently available to request for withdrawal, not bound to any selected period.
-**Use:** Decide whether to request a payout. Read it beside Paid Sales, understanding that Paid Sales counts valid paid commerce while Available Balance shows withdrawable cash.
-**Important rule:** This is a current-timestamp snapshot — do not apply the period selector, do not show a trend or percent change, and do not present it as a performance KPI. It is not profit, a bank payout, or Paid Sales. The full money lifecycle (pending settlement, escrow, reserved for payout, paid-out history) stays on the authorized Finance page. Link to Finance for the complete breakdown.
+---
 
 ## Needs attention
 
-### BO-O01 — Orders Need Decision
+### 4. Orders Need Decision — BO-O01
 
-**Type:** Action queue · **Placement:** Immediate operations  
-**Answers:** Which orders need the seller to accept or reject now?
+- **In plain words:** paid prepaid orders waiting for acceptance, plus COD orders waiting for a decision — **nearest deadline first**, with a countdown.
+- **Use it to:** act before the deadline; a missed decision **auto-cancels the order**.
+- **Rules that keep it honest:** this is not every open order — only orders whose next step is the seller's accept/reject decision. Rows preview the order; the decision itself happens in the Orders workflow.
 
-**Meaning:** Paid prepaid orders not yet accepted and COD orders still waiting for the seller’s decision.  
-**Use:** Work from the nearest decision deadline to prevent automatic cancellation.  
-**Important rule:** This is not every open order, unpaid order, historical cancellation, or fulfillment task.
+### 5. Fulfillment Backlog — BO-F01
 
-### BO-F01 — Fulfillment Backlog
+- **In plain words:** accepted prepaid orders not yet fulfilled — **oldest first**, with age shown.
+- **Use it to:** keep paid customer commitments moving and notice work piling up.
+- **Rules that keep it honest:** excludes orders still waiting for a decision and anything already fulfilled; age is shown neutrally — nothing is called "overdue" until Angkoro adopts a fulfillment target.
 
-**Type:** Action queue · **Placement:** Immediate operations  
-**Answers:** Which accepted prepaid orders still need fulfillment?
+### 6. Inventory Attention — BO-I05
 
-**Meaning:** Valid prepaid orders the seller accepted but has not fulfilled.  
-**Use:** Work oldest accepted orders first and watch whether paid customer commitments are building up.  
-**Important rule:** Exclude orders waiting for acceptance, COD decision work, and fulfilled or completed orders. Show age, but do not call an order overdue until Angkoro adopts a fulfillment target.
+- **In plain words:** tracked items with **0 or fewer available units (Out of stock)** shown first, then items with **1–5 available units (Low stock)**. Available = stock minus reservations.
+- **Use it to:** restock, fix inventory records, review reservations, or change sellability before more sales are affected.
+- **Rules that keep it honest:** the 1–5 rule is a simple v1 warning — not a forecast or a per-product reorder point; untracked items are never called out of stock.
 
-### BO-I05 — Inventory Attention
+---
 
-**Type:** Action queue · **Placement:** Immediate operations  
-**Answers:** Which tracked products or variants need inventory attention because they are out of stock or low stock?
+## Supporting detail
 
-**Meaning:** Two separate states based on available tracked quantity after reservations: **Out of Stock** at 0 or fewer units and **Low Stock** at 1–5 units.  
-**Use:** Review Out of Stock first, then Low Stock; restock, correct inventory, review reservations, or change sellability.  
-**Important rule:** The 1–5 rule is a simple v1 warning, not a demand forecast or product-specific reorder point. It may over-alert slow sellers and under-alert fast sellers.
+### 7. Average Paid Order Value — BO-S04
 
-## Supporting content
+- **In plain words:** Paid Sales ÷ Paid Orders for the same period and population.
+- **Use it to:** explain the health numbers — did customers place larger or smaller paid orders?
+- **Rules that keep it honest:** undefined with zero paid orders (shows "—", never an error); always a supporting card below the headline row, never a headline KPI.
 
-### BO-S04 — Average Paid Order Value
+### 8. Top Products — BO-I01
 
-**Type:** Supporting metric · **Placement:** Beneath business health  
-**Answers:** What was Average Paid Order Value?
+- **In plain words:** the **top 5** products by valid paid units in the selected period, as ranked bars.
+- **Use it to:** spot proven demand for restock and promotion decisions; the full ranking lives in Analytics.
+- **Rules that keep it honest:** only products with at least 1 paid unit appear — the list is never padded; ties break by paid value, then name; paid units are **not** revenue, profit, or a forecast.
 
-**Meaning:** Paid Sales divided by Paid Orders for the same valid paid population, calculated separately for each currency.  
-**Use:** Explain whether Paid Sales changed because paid orders became larger or smaller.  
-**Important rule:** It is undefined when there are no Paid Orders. Do not combine currencies or present it as a headline KPI.
+---
 
-### BO-I01 — Top Products
+## Conditional
 
-**Type:** Breakdown · **Placement:** Beneath business health  
-**Answers:** Which product sold the most valid paid units?
+### 9. Store Readiness — BO-R01–R06
 
-**Meaning:** Products ranked by units in valid paid orders during the selected period.  
-**Use:** Identify proven demand for stock and promotion decisions.  
-**Important rule:** Paid units are not Paid Sales, profit, margin, or a demand forecast. The ranking must follow the selected period.
-
-## Conditional content
-
-### BO-R01–R06 — Store Readiness
-
-**Type:** Conditional status · **Placement:** Only when setup is incomplete or blocked  
-**Answers:**
-
-- BO-R01 — Is the store active and allowed to operate?
-- BO-R02 — Does the storefront have at least one active sellable product?
-- BO-R03 — Can customers use at least one configured checkout method?
-- BO-R04 — Is the payout bank account verified?
-- BO-R05 — Are Telegram and order notifications connected and enabled?
-- BO-R06 — Are required contact and fulfillment settings complete?
-
-**Meaning:** A setup checklist for conditions that may block selling, order handling, fulfillment, or payouts.  
-**Use:** Show only failed or incomplete checks; hide the checklist when setup is complete.  
-**Important rule:** Store Readiness is not a performance KPI and must not expose sensitive bank details.
+- **In plain words:** a setup checklist covering: store active · sellable product · checkout configured · payout bank verified · notifications connected · contact & fulfillment settings complete.
+- **Use it to:** fix whatever is blocking selling, order handling, or payouts — each failing check links to its fix.
+- **Rules that keep it honest:** **only failing checks are shown** (with a one-line count of passing ones); the whole section disappears when setup is complete; sensitive bank details never appear here; it is a setup status, not a performance metric.

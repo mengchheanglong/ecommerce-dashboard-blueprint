@@ -17,6 +17,7 @@ This page is the presentation view. The complete question register, decision rea
 |---|---|---|
 | **Paid Sales** | How much customers paid for valid orders | Shows real paid business, with a matched previous-period comparison |
 | **Paid Orders** | How many distinct orders became valid paid orders | Explains whether sales movement came from order volume |
+| **Available Balance** | How much money is withdrawable right now | The owner's immediate cash question — a current snapshot, never a period metric |
 
 ### Immediate operations
 
@@ -29,16 +30,16 @@ This page is the presentation view. The complete question register, decision rea
 ## One-screen shape
 
 ```text
-[ Paid Sales                  ] [ Paid Orders ]
+[ Paid Sales ] [ Paid Orders ] [ Available Balance — snapshot ]
 
 [ Need Decision ] [ Fulfillment ] [ Inventory Attention ]
 
-[ Average Paid Order Value    ] [ Top Products ]
+[ Average Paid Order Value    ] [ Top Products — top 5 ]
 
 [ Store Readiness — only when setup needs attention ]
 ```
 
-The five summary indicators are not five equal cards. Paid Sales and Paid Orders monitor business health. The other three lead to immediate work.
+These are not equal cards. Paid Sales and Paid Orders monitor business health; Available Balance is a "right now" cash snapshot with no period or trend; the three queues lead to immediate work.
 
 ## Supporting and conditional content
 
