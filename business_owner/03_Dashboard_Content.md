@@ -19,17 +19,19 @@ Every item answers one question from [02_Evaluation.md](02_Evaluation.md). Layou
 
 ## The dashboard at a glance
 
-| # | Item | ID | Type | Answers in one line |
+| # | Item | ID | Type | The owner asks… |
 |---|---|---|---|---|
-| 1 | **Paid Sales** | BO-S01 | Primary KPI | How much did customers actually pay this period? |
-| 2 | **Paid Orders** | BO-S02 | Primary KPI | How many orders became valid paid orders? |
-| 3 | **Available Balance** | BO-M01 | Current finance snapshot | How much money can I withdraw right now? |
-| 4 | **Orders Need Decision** | BO-O01 | Action queue | Which orders must I accept or reject before their deadline? |
-| 5 | **Fulfillment Backlog** | BO-F01 | Action queue | Which accepted paid orders still need fulfillment? |
-| 6 | **Inventory Attention** | BO-I05 | Action queue | Which items are out of stock or running low? |
-| 7 | **Avg Paid Order Value** | BO-S04 | Supporting metric | Did orders get bigger or smaller? |
-| 8 | **Top Products** | BO-I01 | Breakdown | Which products sold the most paid units? |
-| 9 | **Store Readiness** | BO-R01–R06 | Conditional status | Is unfinished setup blocking my store? |
+| 1 | **Paid Sales** | BO-S01 | Primary KPI | *"How much did I actually make this period?"* |
+| 2 | **Paid Orders** | BO-S02 | Primary KPI | *"How many orders did I get paid for?"* |
+| 3 | **Available Balance** | BO-M01 | Current finance snapshot | *"How much can I withdraw right now?"* |
+| 4 | **Orders Need Decision** | BO-O01 | Action queue | *"Which orders must I answer before they auto-cancel?"* |
+| 5 | **Fulfillment Backlog** | BO-F01 | Action queue | *"Which paid orders do I still need to ship?"* |
+| 6 | **Inventory Attention** | BO-I05 | Action queue | *"What's out of stock or running low?"* |
+| 7 | **Avg Paid Order Value** | BO-S04 | Supporting metric | *"Are customers spending more or less per order?"* |
+| 8 | **Top Products** | BO-I01 | Breakdown | *"What's my best seller?"* |
+| 9 | **Store Readiness** | BO-R01–R06 | Conditional status | *"Is anything in my setup blocking sales or payouts?"* |
+
+The plain phrasing above is the door; the governed question behind each ID in [02_Evaluation.md](02_Evaluation.md) is the definition. When wording and implementation disagree, the governed question wins.
 
 ## Shared rules for every item
 
