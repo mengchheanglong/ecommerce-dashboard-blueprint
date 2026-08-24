@@ -59,7 +59,7 @@ export function ConfirmAction({
 	requireReason?: boolean
 	confirmLabel: string
 	tone?: "danger" | "caution"
-	onConfirm: (reason: string) => void
+	onConfirm: (reason: string) => boolean | void
 }) {
 	const [reason, setReason] = useState("")
 	const [submitting, setSubmitting] = useState(false)
@@ -80,8 +80,10 @@ export function ConfirmAction({
 		submittedForOpen.current = true
 		setSubmitting(true)
 		const cleanReason = reason.trim()
-		record({ action: title, target, reason: cleanReason || undefined })
-		onConfirm(cleanReason)
+		const ok = onConfirm(cleanReason) !== false
+		if (ok) {
+			record({ action: title, target, reason: cleanReason || undefined })
+		}
 		setReason("")
 		close(false)
 	}

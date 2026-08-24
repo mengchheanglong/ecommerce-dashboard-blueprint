@@ -22,6 +22,17 @@ The prototype remains mock-only: no backend, authentication, persistence, or rea
 
 Additional hardening included payment matching, merchant-refund recording without money movement, billing correction guards, settlement evidence validation, recovery evidence/session guards, admin self-disable protection, administrator re-enable, duplicate invite rejection, audit session labeling, double-submit protection, reason length limits, and session-count updates after revocation.
 
+## Post-review hardening
+
+A follow-up read-only review identified and the implementation now fixes:
+
+- backend-side `plan.manage`, `health.retry`, and `export.run` permission and input guards
+- boolean success returns for plan, retry, invite, administrator, user, recovery, payment, settlement, store, and order-issue mutations
+- success toasts and confirmation activity records only after the underlying mutation succeeds
+- reason attribution for plan activation/deactivation and operational retries
+
+The follow-up gates also passed: `npm run typecheck`, `npm run lint`, and `npm run build` all exited 0.
+
 ## Verification
 
 Canonical project gates, run independently after the final fix:

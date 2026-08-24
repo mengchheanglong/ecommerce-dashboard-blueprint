@@ -241,12 +241,12 @@ export default function OrderIssuesPage() {
 				confirmLabel="Start investigation"
 				tone="caution"
 				onConfirm={(reason) => {
-					if (
-						starting &&
-						setOrderIssueState(starting.id, "Investigating", reason, operator.name, role)
-					) {
+					if (!starting) return false
+					const ok = setOrderIssueState(starting.id, "Investigating", reason, operator.name, role)
+					if (ok) {
 						notify.recorded("Investigation started", starting.id)
 					}
+					return ok
 				}}
 			/>
 
@@ -266,12 +266,12 @@ export default function OrderIssuesPage() {
 				confirmLabel="Resolve issue"
 				tone="caution"
 				onConfirm={(reason) => {
-					if (
-						resolving &&
-						setOrderIssueState(resolving.id, "Resolved", reason, operator.name, role)
-					) {
+					if (!resolving) return false
+					const ok = setOrderIssueState(resolving.id, "Resolved", reason, operator.name, role)
+					if (ok) {
 						notify.recorded("Order issue resolved", resolving.id)
 					}
+					return ok
 				}}
 			/>
 		</div>

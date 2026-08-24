@@ -699,27 +699,51 @@ export function decideAccountReview(
    Actions — plans (R5.11–R5.16)
 ------------------------------------------------------------------------- */
 
-export function updatePlan(planId: string, patch: Partial<Pick<Plan, "price" | "period">>, changeNote: string, operator: string, role: Role) {
-	state.plans = state.plans.map((p) => (p.id === planId ? { ...p, ...patch } : p))
+export function updatePlan(
+	planId: string,
+	patch: Partial<Pick<Plan, "price" | "period">>,
+	changeNote: string,
+	operator: string,
+	role: Role,
+): boolean {
+	const cleanNote = cleanText(changeNote, 8)
+	const cleanOperator = cleanText(operator, 2, 120)
+	const plan = state.plans.find((entry) => entry.id === planId)
+	if (!can(role, "plan.manage") || !plan || !cleanNote || !cleanOperator) return false
+
+	const allowed: Partial<Pick<Plan, "price" | "period">> = {}
+	if (patch.price !== undefined) {
+		if (typeof patch.price !== "number" || !Number.isFinite(patch.price) || patch.price < 0) return false
+		allowed.price = patch.price
+	}
+	if (patch.period !== undefined) {
+		if (patch.period !== "Monthly" && patch.period !== "Yearly") return false
+		allowed.period = patch.period
+	}
+	if (Object.keys(allowed).length === 0) return false
+
+	state.plans = state.plans.map((p) => (p.id === planId ? { ...p, ...allowed } : p))
 	appendAudit({
 		action: "Plan configuration updated",
 		target: planId,
-		actor: operator,
+		actor: cleanOperator,
 		role,
-		reason: changeNote,
+		reason: cleanNote,
 	})
 	emit()
+	return true
 }
 
-export function togglePlanActive(planId: string, operator: string, role: Role) {
-	let became: string | undefined
-	state.plans = state.plans.map((p) => {
-		if (p.id !== planId) return p
-		became = p.active ? "deactivated" : "activated"
-		return { ...p, active: !p.active }
-	})
-	appendAudit({ action: `Plan ${became}`, target: planId, actor: operator, role })
+export function togglePlanActive(planId: string, reason: string, operator: string, role: Role): boolean {
+	const cleanReason = cleanText(reason, 8)
+	const cleanOperator = cleanText(operator, 2, 120)
+	const plan = state.plans.find((entry) => entry.id === planId)
+	if (!can(role, "plan.manage") || !plan || !cleanReason || !cleanOperator) return false
+	const became = plan.active ? "deactivated" : "activated"
+	state.plans = state.plans.map((p) => (p.id === planId ? { ...p, active: !p.active } : p))
+	appendAudit({ action: `Plan ${became}`, target: planId, actor: cleanOperator, role, reason: cleanReason })
 	emit()
+	return true
 }
 
 /* -------------------------------------------------------------------------
@@ -869,14 +893,26 @@ export function decideRecovery(
    Actions — operational health (R7.6)
 ------------------------------------------------------------------------- */
 
-export function retryProcess(processId: string, operator: string, role: Role) {
+export function retryProcess(processId: string, reason: string, operator: string, role: Role): boolean {
+	const cleanReason = cleanText(reason, 8)
+	const cleanOperator = cleanText(operator, 2, 120)
+	const process = state.processHealth.find((entry) => entry.id === processId)
+	if (
+		!can(role, "health.retry") ||
+		!process ||
+		process.state === "Healthy" ||
+		!process.retryable ||
+		!cleanReason ||
+		!cleanOperator
+	) return false
 	state.processHealth = state.processHealth.map((p) =>
 		p.id === processId
 			? { ...p, state: "Healthy", failures24h: 0, lastRunAt: stamp(), detail: `${p.detail}\n\nRetry succeeded — process healthy again.` }
 			: p,
 	)
-	appendAudit({ action: "Operational retry performed", target: processId, actor: operator, role })
+	appendAudit({ action: "Operational retry performed", target: processId, actor: cleanOperator, role, reason: cleanReason })
 	emit()
+	return true
 }
 
 /* -------------------------------------------------------------------------
@@ -994,9 +1030,13 @@ export function revokeAdminSession(sessionId: string, operator: string, operator
    Actions — exports (R8.3–R8.5)
 ------------------------------------------------------------------------- */
 
-export function runExport(label: string, operator: string, role: Role) {
-	appendAudit({ action: "Data export produced", target: label, actor: operator, role })
+export function runExport(label: string, operator: string, role: Role): boolean {
+	const cleanLabel = cleanText(label, 2, 240)
+	const cleanOperator = cleanText(operator, 2, 120)
+	if (!can(role, "export.run") || !cleanLabel || !cleanOperator) return false
+	appendAudit({ action: "Data export produced", target: cleanLabel, actor: cleanOperator, role })
 	emit()
+	return true
 }
 
 export { appendAudit }

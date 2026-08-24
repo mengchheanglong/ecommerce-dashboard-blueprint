@@ -109,8 +109,9 @@ export function StoreControls({
 				confirmLabel="Suspend store"
 				tone="danger"
 				onConfirm={(reason) => {
-					setStoreStatus(storeId, "Suspended", reason, operator.name, role)
-					notify.recorded("Store suspended", `${target} · merchant notified.`)
+					const ok = setStoreStatus(storeId, "Suspended", reason, operator.name, role)
+					if (ok) notify.recorded("Store suspended", `${target} · merchant notified.`)
+					return ok
 				}}
 			/>
 
@@ -132,8 +133,9 @@ export function StoreControls({
 				confirmLabel="Restore store"
 				tone="caution"
 				onConfirm={(reason) => {
-					setStoreStatus(storeId, "Active", reason, operator.name, role)
-					notify.recorded("Store restored", target)
+					const ok = setStoreStatus(storeId, "Active", reason, operator.name, role)
+					if (ok) notify.recorded("Store restored", target)
+					return ok
 				}}
 			/>
 

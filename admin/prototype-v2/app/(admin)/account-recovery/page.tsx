@@ -204,15 +204,15 @@ export default function AccountRecoveryPage() {
 				confirmLabel="Approve recovery"
 				tone="danger"
 				onConfirm={(reason) => {
-					if (
-						approving &&
-						decideRecovery(approving.id, "Approved", reason, operator.name, role)
-					) {
+					if (!approving) return false
+					const ok = decideRecovery(approving.id, "Approved", reason, operator.name, role)
+					if (ok) {
 						notify.recorded(
 							"Recovery approved",
 							`${approving.accountName} · old sessions revoked.`,
 						)
 					}
+					return ok
 				}}
 			/>
 		</div>

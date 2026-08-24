@@ -68,16 +68,18 @@ export default function AdminAccountsPage() {
 
 	function invite() {
 		if (!inviteValid) return
-		inviteAdmin(
+		const id = inviteAdmin(
 			inviteForm.name.trim(),
 			inviteForm.email.trim(),
 			inviteForm.role,
 			operator.name,
 			role,
 		)
-		notify.recorded("Invitation sent", `${inviteForm.name} · ${inviteForm.role}`)
-		setInviting(false)
-		setInviteForm({ name: "", email: "", role: "Admin" })
+		if (id) {
+			notify.recorded("Invitation sent", `${inviteForm.name} · ${inviteForm.role}`)
+			setInviting(false)
+			setInviteForm({ name: "", email: "", role: "Admin" })
+		}
 	}
 
 	const columns: Column<AdminAccount>[] = [
@@ -327,12 +329,12 @@ export default function AdminAccountsPage() {
 				confirmLabel="Disable access"
 				tone="danger"
 				onConfirm={(reason) => {
-					if (disabling)
-						disableAdmin(disabling.id, reason, operator.name, operator.email, role)
-					notify.recorded(
-						"Administrator access disabled",
-						disabling ? `${disabling.name} · sessions ended.` : undefined,
-					)
+					if (!disabling) return
+					const ok = disableAdmin(disabling.id, reason, operator.name, operator.email, role)
+					if (ok) {
+						notify.recorded("Administrator access disabled", `${disabling.name} · sessions ended.`)
+					}
+					return ok
 				}}
 			/>
 
@@ -353,9 +355,12 @@ export default function AdminAccountsPage() {
 				confirmLabel="Enable access"
 				tone="caution"
 				onConfirm={(reason) => {
-					if (enabling && enableAdmin(enabling.id, reason, operator.name, role)) {
+					if (!enabling) return false
+					const ok = enableAdmin(enabling.id, reason, operator.name, role)
+					if (ok) {
 						notify.recorded("Administrator access enabled", enabling.name)
 					}
+					return ok
 				}}
 			/>
 

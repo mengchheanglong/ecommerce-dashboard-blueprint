@@ -237,9 +237,12 @@ export default function PaymentsPage() {
 				confirmLabel="Match payment"
 				tone="caution"
 				onConfirm={(reason) => {
-					if (matching && matchPayment(matching.id, reason, operator.name, role)) {
+					if (!matching) return false
+					const ok = matchPayment(matching.id, reason, operator.name, role)
+					if (ok) {
 						notify.recorded("Payment matched", matching.id)
 					}
+					return ok
 				}}
 			/>
 
