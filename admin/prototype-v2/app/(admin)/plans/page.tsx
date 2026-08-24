@@ -162,11 +162,15 @@ export default function PlansPage() {
 				confirmLabel={deactivating?.active ? "Deactivate plan" : "Activate plan"}
 				tone="caution"
 				onConfirm={(reason) => {
-					if (deactivating) togglePlanActive(deactivating.id, operator.name, role)
-					notify.recorded(
-						deactivating?.active ? "Plan deactivated" : "Plan activated",
-						deactivating ? deactivating.name : undefined,
-					)
+					if (!deactivating) return
+					const ok = togglePlanActive(deactivating.id, reason, operator.name, role)
+					if (ok) {
+						notify.recorded(
+							deactivating.active ? "Plan deactivated" : "Plan activated",
+							deactivating.name,
+						)
+					}
+					return ok
 				}}
 				/>
 
@@ -224,15 +228,17 @@ export default function PlansPage() {
 							}
 							onClick={() => {
 								if (!editing) return
-								updatePlan(
+								const ok = updatePlan(
 									editing.id,
 									{ price: Number(newPrice) },
 									`Price changed from $${editing.price} to $${newPrice}`,
 									operator.name,
 									role,
 								)
-								notify.recorded("Plan price updated", `${editing.name} · applies at next renewal`)
-								setEditing(null)
+								if (ok) {
+									notify.recorded("Plan price updated", `${editing.name} · applies at next renewal`)
+									setEditing(null)
+								}
 							}}
 						>
 							Apply change

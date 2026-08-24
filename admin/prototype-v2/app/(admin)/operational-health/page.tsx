@@ -174,8 +174,10 @@ export default function OperationalHealthPage() {
 				confirmLabel="Retry operations"
 				tone="caution"
 				onConfirm={(reason) => {
-					if (retrying) retryProcess(retrying.id, operator.name, role)
-					notify.recorded("Retry succeeded", retrying ? retrying.name : undefined)
+					if (!retrying) return
+					const ok = retryProcess(retrying.id, reason, operator.name, role)
+					if (ok) notify.recorded("Retry succeeded", retrying.name)
+					return ok
 				}}
 			/>
 		</div>

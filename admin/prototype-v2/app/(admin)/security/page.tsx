@@ -203,8 +203,10 @@ export default function SecurityPage() {
 				confirmLabel="Revoke session"
 				tone="caution"
 				onConfirm={(reason) => {
-					if (revoking) revokeAdminSession(revoking.id, operator.name, role)
-					notify.recorded("Session revoked", revoking ? revoking.adminName : undefined)
+					if (!revoking) return false
+					const ok = revokeAdminSession(revoking.id, operator.name, role)
+					if (ok) notify.recorded("Session revoked", revoking.adminName)
+					return ok
 				}}
 			/>
 		</div>

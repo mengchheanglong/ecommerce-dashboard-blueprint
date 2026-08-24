@@ -42,8 +42,8 @@ export function UserControls({
 	const selectedStatus = selected?.status ?? "Active"
 	const restricted = selectedStatus !== "Active"
 
-	function applyStatus(status: "Active" | "Restricted" | "Banned", reason: string) {
-		setUserStatus(userId, selected?.kind ?? "Shopper", status, reason, operator.name, role)
+	function applyStatus(status: "Active" | "Restricted" | "Banned", reason: string): boolean {
+		return setUserStatus(userId, selected?.kind ?? "Shopper", status, reason, operator.name, role)
 	}
 
 	return (
@@ -121,8 +121,9 @@ export function UserControls({
 				confirmLabel="Revoke sessions"
 				tone="caution"
 				onConfirm={() => {
-					revokeUserSessions(userId, operator.name, role)
-					notify.recorded("User sessions revoked", target)
+					const ok = revokeUserSessions(userId, operator.name, role)
+					if (ok) notify.recorded("User sessions revoked", target)
+					return ok
 				}}
 			/>
 
@@ -145,8 +146,9 @@ export function UserControls({
 				confirmLabel="Restrict access"
 				tone="danger"
 				onConfirm={(reason) => {
-					applyStatus("Restricted", reason)
-					notify.recorded("User access restricted", target)
+					const ok = applyStatus("Restricted", reason)
+					if (ok) notify.recorded("User access restricted", target)
+					return ok
 				}}
 			/>
 
@@ -168,8 +170,9 @@ export function UserControls({
 				confirmLabel="Ban access"
 				tone="danger"
 				onConfirm={(reason) => {
-					applyStatus("Banned", reason)
-					notify.recorded("User access banned", target)
+					const ok = applyStatus("Banned", reason)
+					if (ok) notify.recorded("User access banned", target)
+					return ok
 				}}
 			/>
 
@@ -187,8 +190,9 @@ export function UserControls({
 				confirmLabel="Restore access"
 				tone="caution"
 				onConfirm={(reason) => {
-					applyStatus("Active", reason)
-					notify.recorded("User access restored", target)
+					const ok = applyStatus("Active", reason)
+					if (ok) notify.recorded("User access restored", target)
+					return ok
 				}}
 			/>
 		</>

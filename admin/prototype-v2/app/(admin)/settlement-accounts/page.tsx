@@ -181,9 +181,11 @@ function ReviewRow({ review }: { review: AccountReview }) {
 				confirmLabel="Approve destination"
 				tone="caution"
 				onConfirm={(reason) => {
-					if (decideAccountReview(review.id, "Approved", reason, operator.name, role)) {
+					const ok = decideAccountReview(review.id, "Approved", reason, operator.name, role)
+					if (ok) {
 						notify.recorded("Destination approved", target)
 					}
+					return ok
 				}}
 			/>
 
@@ -201,9 +203,11 @@ function ReviewRow({ review }: { review: AccountReview }) {
 				confirmLabel="Reject destination"
 				tone="danger"
 				onConfirm={(reason) => {
-					if (decideAccountReview(review.id, "Rejected", reason, operator.name, role)) {
+					const ok = decideAccountReview(review.id, "Rejected", reason, operator.name, role)
+					if (ok) {
 						notify.recorded("Destination rejected", target)
 					}
+					return ok
 				}}
 			/>
 		</li>
