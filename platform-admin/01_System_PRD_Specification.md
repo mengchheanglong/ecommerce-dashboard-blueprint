@@ -2,8 +2,8 @@
 
 | Field | Detail |
 |---|---|
-| **Document Type** | Product Requirements Document (PRD) — Architecture & Template |
-| **System Surface** | Internal Platform Administration System |
+| **Document Type** | Comprehensive System Product Requirements Document (PRD) |
+| **System Surface** | Internal Platform Administration System (Full Platform Control Plane) |
 | **Target Audience** | Engineering Leads, Product Managers, Platform Operators, Security Architects |
 | **Responsibility Model** | Multi-tenant SaaS / Distributed Commerce (Merchant-owned stores & operations; Platform-governed infrastructure & rails) |
 
@@ -13,7 +13,7 @@
 
 A multi-tenant e-commerce platform provides independent businesses with branded digital storefronts while centralizing infrastructure, identity, payment gateways, and compliance.
 
-### 1.1 The Responsibility Boundary
+### 1.1 The Operational Boundary
 Clear separation between merchant responsibilities and platform responsibilities is essential to prevent platform operators from overstepping into day-to-day merchant operations:
 
 ```
@@ -36,13 +36,17 @@ Clear separation between merchant responsibilities and platform responsibilities
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-The Internal Platform Admin System provides operators with a single, permission-controlled, auditable environment to support merchants, investigate technical exceptions, manage financial settlements, and monitor overall ecosystem health.
+The Internal Platform Admin System gives operators a private, permission-controlled environment to support merchants, investigate technical exceptions, manage financial settlements, and monitor overall ecosystem health.
+
+### 1.2 Time & Clock Policy
+- **Authoritative Server Time:** All SLA calculations, token expirations, auto-cancellations, and security gates enforce strictly against server-side UTC timestamps (`TIMESTAMPTZ`). Client browser clocks are purely informational and cannot alter deadlines.
+- **Configurable Platform Display Timezone:** Timestamps and date-based exports format in the platform's configured operational timezone (e.g. UTC, UTC+7, UTC-5) without altering stored epoch values.
 
 ---
 
-## 2. Administrator Roles & Permission Matrix (RBAC)
+## 2. Administrator Roles & Action-Level Boundaries (RBAC)
 
-The admin system enforces a strict least-privilege two-role model: **Admin** and **Super Admin**.
+The system enforces a strict least-privilege two-role model: **Admin** and **Super Admin**.
 
 ```text
 ┌───────────────────────────────────────────────────────────────┐
@@ -62,27 +66,35 @@ The admin system enforces a strict least-privilege two-role model: **Admin** and
 │  + Verify / Reject Merchant Bank & Settlement Accounts        │
 │  + Suspend / Reinstate Stores and User Accounts               │
 │  + Revoke Active Sessions & Force Credential Resets           │
+│  + Provision & Activate Gateway Credentials                   │
 │  + Modify Plan Entitlements & Platform Settings               │
 │  + Create, Edit, or Deprecate Admin Accounts                  │
 └───────────────────────────────────────────────────────────────┘
 ```
 
-### 2.1 Detailed Role Capabilities
+### 2.1 Action-Level Capabilities
 
-| Module / Action | Admin | Super Admin | Audit Log Trigger |
+| Action / Capability | Admin | Super Admin | Audit Log Trigger |
 |---|:---:|:---:|:---:|
 | **Platform Telemetry & Metrics** | View Only | View Only | No |
 | **Support & Concierge Cases** | Create, Assign, Reply, Resolve | Full Access | Yes |
-| **Store Directory** | View Details, Inspect Config | Suspend, Reinstate, Update Limits | Yes (on state mutation) |
-| **User Directory** | View Profile, History | Restrict, Ban, Revoke Sessions | Yes (on session/ban change) |
-| **Order Exceptions** | View, Investigate Webhook | Force Status Sync, Flag Investigation | Yes |
+| **Store Directory** | View Details, Inspect Config | Suspend, Reinstate, Update Limits | Yes (Mandatory Reason) |
+| **User Directory** | View Profile, History | Restrict, Ban, Revoke Sessions | Yes (Mandatory Reason) |
+| **Order Exceptions & Stuck Orders** | View, Investigate Webhook | Force Status Sync, Flag Audit | Yes |
 | **Customer Payments** | Inspect Status, Gateways | Mark Gateway Reconciliation Note | Yes |
 | **Merchant Settlement Accounts** | View Submitted Details | Approve / Reject KYC & Bank Account | Yes (MANDATORY) |
 | **Payout Executions** | View History & Balances | Execute Payout / Hold Escrow | Yes (MANDATORY) |
+| **Gateway Credential Provisioning** | View Safe Metadata Only | Provision, Rotate, Suspend Credentials | Yes (MANDATORY) |
 | **Subscription Plans & Billing** | View Plans & Subscribers | Create / Modify Plans & Feature Gates | Yes |
 | **Operational Health & Queues** | View Status, Failure Dumps | Trigger Retry / Purge Failed Jobs | Yes |
 | **Admin Account Management** | None | Invite, Change Roles, Deactivate | Yes (MANDATORY) |
-| **Audit Logs** | View Accessible Actions | View All Actions | No |
+| **Audit Logs** | View Accessible Actions | View All Actions | No (Read-only) |
+
+### 2.2 Hard Administrative Safeguards
+1. **Self-Demotion & Lockout Prevention:** No operator may change their own administrator role or disable their own account. The last active Super Admin account cannot be disabled or demoted.
+2. **No Raw Secrets:** The admin system never displays, copies, or logs stored raw database passwords, full credit card numbers, or gateway API secret keys.
+3. **No Ad-Hoc SQL Execution:** The web console never provides unconstrained raw SQL editors or arbitrary script runners.
+4. **Assisted Merchant Changes:** Direct modifications to a merchant's store settings by an operator require explicit merchant consent, linked to an active support ticket ID.
 
 ---
 
@@ -90,85 +102,94 @@ The admin system enforces a strict least-privilege two-role model: **Admin** and
 
 | ID | Core Objective | Measurable Success Criteria |
 |---|---|---|
-| **O1** | **Zero Support Leakage** | 100% of merchant support inquiries originating via in-app forms, support emails, or webhooks generate a trackable ticket ID. |
-| **O2** | **Connected Investigation** | Operational exceptions (e.g. webhook drop) link directly to affected store, order, and customer records. |
-| **O3** | **Immutable Accountability** | Every sensitive state change records `admin_user_id`, timestamp, prior state, new state, and mandatory reason. |
-| **O4** | **Financial Traceability** | 100% of manual and automated payout transactions reconcile against double-entry ledger entries. |
-| **O5** | **Governed SLA Queues** | Action backlogs (KYC review, payout approval, stuck orders) are sorted by oldest-pending and color-coded by SLA band. |
+| **O1** | **Zero Support Leakage** | 100% of merchant support inquiries generate a trackable ticket ID linked to affected store, order, or customer records. |
+| **O2** | **Connected Investigation** | Operational exceptions (e.g. gateway timeout) link directly to originating store and user context. |
+| **O3** | **Immutable Accountability** | Every sensitive administrative state mutation records `actor_id`, timestamp, prior state, new state, and mandatory reason. |
+| **O4** | **Financial Traceability** | 100% of payout transactions and fee recognitions reconcile against immutable double-entry ledger accounts. |
+| **O5** | **Governed SLA Queues** | Action backlogs (KYC review, payout approval, stuck orders) sort oldest-pending with color-coded SLA timers. |
 | **O6** | **High-Fidelity Telemetry** | Platform KPIs (MRR, GMV, Success Rates) derive strictly from verified server-side event timestamps. |
-
-### 3.1 Explicit Non-Goals
-To prevent feature bloat and security hazards, the V1 admin system explicitly excludes:
-- **Marketplace Mediation:** Arbitrating standard return/warranty claims between shoppers and merchants.
-- **Unrestricted Impersonation:** Logging in as a merchant without cryptographic delegation or merchant awareness.
-- **Raw Secret Display:** Exposing database passwords, API keys, or full credit card / bank numbers.
-- **Ad-Hoc Database Consoles:** Providing unconstrained raw SQL query execution in the browser.
-- **Silent Cascading Deletions:** Deleting a merchant account must never cascade-delete immutable financial ledger logs.
 
 ---
 
-## 4. Feature Specifications by Module
+## 4. The 11 Core System Modules
 
-### 4.1 Overview & Action Center
-- **Executive Health KPIs:**
-  - **Active Paid Stores:** Total stores currently subscribed, with 30-day net change.
-  - **Subscription MRR:** Monthly Recurring Revenue plus trailing 30-day collection velocity.
-  - **Platform Paid Commerce (GMV):** Total valid commerce sales across all hosted stores, broken down by currency.
-  - **Payment Gateway Success Rate:** Ratio of successful payment intents against all initiated intents.
-- **Growth Funnel:** Store creation → store activation → first valid paid order.
-- **The Action Center (SLA Queues):**
-  - **Bank Verification Queue:** New accounts awaiting KYC review (SLA: < 24h).
-  - **Payout Processing Queue:** Pending payout withdrawals awaiting execution (SLA: < 48h).
-  - **Order Issues Queue:** Stuck or unacknowledged orders (SLA: < 12h).
-  - **Support Queue:** Open merchant and platform tickets (SLA: < 4h).
-- **System Status Chip:** Live health indicator showing database latency, background worker lag, and gateway uptime.
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│                   INTERNAL PLATFORM ADMINISTRATION                     │
+├────────────────────────────────────────────────────────────────────────┤
+│  1. Overview & Telemetry: Headline KPIs, Activation Funnel, Trust Chips│
+│  2. Support & Concierge: Multi-channel intake, connected investigations│
+│  3. Store Directory: Tenant search, store configuration & suspensions  │
+│  4. User Directory: Identity controls, sessions, credential management │
+│  5. Order Issues: Stuck orders, gateway timeouts, dispute tracking     │
+│  6. Customer Payments: Gateway webhooks, intent logs, refund auditing  │
+│  7. Merchant Settlements: Payout review, ledger audit, fund execution  │
+│  8. Settlement Accounts: KYC bank account review, SLA queues           │
+│  9. Plans & Billing: Subscription tiers, contracted MRR, entitlements  │
+│ 10. Operational Health: Background jobs, worker queues, API monitoring │
+│ 11. Security & Audit: RBAC accounts, immutable append-only audit trail │
+└────────────────────────────────────────────────────────────────────────┘
+```
 
-### 4.2 Support & Concierge System
-- Unified case intake across web forms, emails, and integrated messaging webhooks.
-- Case linking: Each case can be attached to a `store_id`, `user_id`, `order_id`, or `payment_id`.
-- Internal discussion threads: Private operator notes segregated from merchant-visible messages.
-- Pre-canned responses for standard compliance requests.
+### Module 1: Overview & Executive Telemetry
+- **Primary KPIs:** Active Paid Stores (with 30-day net change), Subscription MRR & Cash Collections, Platform Paid Sales & Orders (GMV by currency), Gateway Success Rate.
+- **Tenant Activation Funnel:** Created ──► Activated ──► First Valid Paid Order.
+- **The Action Center:** 4 SLA-governed queues (KYC Bank Review, Payout Processing, Order Issues, Support Cases).
+- **Trust Chips:** Real-time health indicators (System Status, Ledger Audit, Plan Entitlements, Data Freshness).
 
-### 4.3 Store Directory & Tenant Management
-- Searchable directory filtering by Plan, Status (`ACTIVE`, `GRACE`, `SUSPENDED`, `TRIAL`), and Creation Date.
-- **Store Detail View:**
-  - Owner details, store domain, connected custom domains.
-  - Plan tier, billing status, next invoice date.
-  - Performance summary: Lifetime GMV, 30-day order volume.
-- **Store Controls (Super Admin only):**
-  - Suspend store (temporary shutdown with customizable public banner).
-  - Reinstate store.
-  - Adjust feature flags / overrides.
+### Module 2: Support & Concierge System
+- Unified ticket intake across web forms, support email, and platform webhooks.
+- Connected dossiers: Cases attach directly to `store_id`, `order_id`, `payment_id`, or `user_id`.
+- Internal discussion threads: Operator notes separated from merchant-visible replies.
+- Strict 72-hour case resolution target with supervisor escalation.
 
-### 4.4 User & Identity Management
-- Separation of identities: **Shoppers** vs. **Store Owners / Staff**.
-- User profile view: Associated stores, order history, active sessions, IP login history.
-- Security actions: Revoke all active bearer tokens / cookies, force password reset, lock account for security investigation.
+### Module 3: Store Directory & Tenant Management
+- Searchable multi-tenant directory with filters for Plan Tier, Status (`ACTIVE`, `GRACE`, `SUSPENDED`), and Launch Date.
+- Store details: Owner contact, domains, connected sales channels, lifetime GMV, order volume.
+- Controls (Super Admin): Temporary store suspension with customizable storefront maintenance banner; assisted configuration changes with recorded consent.
 
-### 4.5 Financial Settlements & Payout Rails
-- Dual-pane payout review interface:
-  - Left pane: Payout request details (amount, requested timestamp, destination bank account, verified status).
-  - Right pane: Store financial breakdown (available balance, locked escrow, recent disputes/refunds).
-- Execution states: `REQUESTED` → `PROCESSING` → `COMPLETED` / `FAILED`.
-- Multi-currency segregation: Payouts executed strictly in store settlement currency without ad-hoc currency conversion.
+### Module 4: User & Identity Management
+- Separation between **Shoppers** and **Store Owners/Staff**.
+- Identity controls: Profile details, associated store memberships, login IP history, active session tracking.
+- Security triggers: One-click session revocation (invalidating JWT refresh tokens in Redis) and forced credential reset.
 
-### 4.6 KYC & Bank Account Verification
-- Queue displaying pending bank submissions sorted oldest-first.
-- Masked projection: Account name, bank identifier, masked account number (`•••• 1234`).
-- Document viewer: Identity proof and business registration preview.
-- Decision triggers:
-  - **Approve:** Activates payout capability for store.
-  - **Reject:** Prompts mandatory reason selection; triggers automated notification to merchant.
+### Module 5: Order Issues & Exception Management
+- Monitoring for unhandled order states:
+  - Missed merchant decision timeouts.
+  - Gateway captures on cancelled/expired orders (triggering auto-refunds).
+  - Webhook delivery failures.
+- Detailed order timeline showing state transitions and payment gateway raw payloads.
 
-### 4.7 Operational Health & Background Processing
-- Real-time queue telemetry: Active workers, queue backlog count, failed job dead-letter queue (DLQ).
-- Specific job monitoring:
+### Module 6: Customer Payments & Gateway Webhooks
+- Unified payment intent log across all integrated payment gateways.
+- Gateway reconciliation fact sheets: Gateway reference ID, currency, amount, fee, capture timestamp.
+- Failure code analysis: Diagnostic drawer grouping declines by issuer error codes.
+
+### Module 7: Merchant Settlements & Payout Rails
+- Payout review workbench: Payout amount requested, merchant available balance, escrow hold, destination account.
+- Payout authorization workflow (Super Admin): Advances state from `REQUESTED` ──► `PROCESSING` ──► `COMPLETED`.
+- Multi-currency segregation: Payouts executed strictly in store settlement currency without ad-hoc FX conversion.
+
+### Module 8: Settlement Accounts & KYC Verification
+- Queue displaying pending bank account submissions sorted oldest-first.
+- SLA Target: 24-hour review window.
+- Masked verification: Account holder name, bank identifier, masked account number (`•••• 1234`).
+- Document inspection: Business registration proof and identity preview.
+
+### Module 9: Store Plans, Entitlements & Billing
+- SaaS subscription plan management: Tier pricing (Monthly/Annual), order volume quotas, feature entitlement flags.
+- Contracted MRR baseline and invoice collection velocity.
+- Private plan overrides: Controlled assignment of custom enterprise plan tiers.
+
+### Module 10: Operational Health & Background Processing
+- Queue telemetry: Active worker threads, queue latency, failed job dead-letter queue (DLQ).
+- Monitored background processors:
   - Order acceptance timeout worker.
   - Subscription billing renewal worker.
   - Webhook delivery dispatcher.
-- Failed job inspection: View stack trace, retry job manually, or archive.
+- Idempotent manual job retries with stack trace inspection.
 
-### 4.8 Security & Audit Logging
-- Append-only audit table: `audit_logs` storing `id`, `actor_id`, `actor_role`, `action`, `resource_type`, `resource_id`, `payload_before`, `payload_after`, `ip_address`, `created_at`.
-- Immutable design: No API or admin interface allows update or deletion of audit logs.
-- Filtering by actor, target store, date range, and severity level.
+### Module 11: Security, Audit Logs & Admin Accounts
+- Admin account roster: Super Admin and Admin staff accounts, session status, invitation management.
+- Append-only audit log: `id`, `actor_id`, `action`, `resource_type`, `resource_id`, `payload_before`, `payload_after`, `ip_address`, `timestamp`.
+- Strict immutability: No API or user can mutate or erase audit entries.

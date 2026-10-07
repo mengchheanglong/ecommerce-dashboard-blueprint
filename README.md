@@ -80,10 +80,11 @@ analytics-dashboard/
 │   ├── 04_Wireframe_and_Visual_Layout.md    # Detailed analytics page layout & chart configurations
 │   └── 05_SQL_Calculation_Logic.md          # Technical queries, timestamps, timezone logic & formulas
 │
-├── shared/                                  # 4. SHARED STANDARDS & CALCULATION TRAPS
+├── shared/                                  # 4. SHARED STANDARDS & IMPLEMENTATION WORKFLOW
 │   ├── README.md                            # Overview of shared engineering standards
 │   ├── 01_Analytics_Audit_and_Pitfalls.md   # Calculation traps (COD traps, currency, gross/net, ledger)
-│   └── 02_Metric_Governance_Framework.md    # Data-readiness taxonomy (L1–L4) & Decision Contract Template
+│   ├── 02_Metric_Governance_Framework.md    # Data-readiness taxonomy (L1–L4) & Decision Contract Template
+│   └── 03_End_to_End_Implementation_Workflow.md # Full development roadmap, tech stack & go-live checklist
 │
 └── .gitignore                               # Standard git ignore rules
 ```
