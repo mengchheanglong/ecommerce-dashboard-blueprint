@@ -1,47 +1,43 @@
-# Merchant Analytics Dashboard — Architecture & Documentation
+# Merchant Analytics Dashboard — Deep Business Intelligence & Growth
 
-This directory contains the complete product specification, metric governance, wireframe architecture, and SQL calculation logic for the **Merchant / Store Owner Analytics Dashboard**.
+The **Merchant Analytics Dashboard** is the deep business intelligence engine for store owners. While the [Merchant Overview Dashboard](../merchant-overview/) handles day-to-day operations and urgent tasks, the Analytics Dashboard focuses on **medium- to long-term performance trends, marketing conversion funnels, catalog merchandising, customer retention, and revenue leakage diagnostics.**
 
 ---
 
 ## Documentation Structure
 
-| Document | Purpose |
+| Document | Description |
 |---|---|
-| **[`01_Metrics_Questions.md`](./01_Metrics_Questions.md)** | Complete register of 60 merchant decision questions across 9 commerce categories. |
-| **[`02_Metric_Evaluation_Matrix.md`](./02_Metric_Evaluation_Matrix.md)** | Evaluation matrix rating all 60 questions across merchant priorities, data readiness, and dashboard placement. |
-| **[`03_Dashboard_KPI_Contracts.md`](./03_Dashboard_KPI_Contracts.md)** | Production KPI decision contracts for the 9 core merchant dashboard items (Paid Sales, Orders, Balance, Queues, AOV, Top Products, Readiness). |
-| **[`04_Wireframe_and_Layout_Spec.md`](./04_Wireframe_and_Layout_Spec.md)** | Desktop/mobile layout wireframes, screen hierarchy, work queue preview drawers, and responsive behaviors. |
-| **[`05_Calculation_Logic_and_Formulas.md`](./05_Calculation_Logic_and_Formulas.md)** | Backend SQL queries, database schema filters, authoritative timestamps, and timezone truncation logic. |
-| **[`06_Seller_Decision_Guide.md`](./06_Seller_Decision_Guide.md)** | Everyday practical decision guide explaining how merchants interpret figures and take operational action. |
+| **[`01_Analytics_Question_Register.md`](./01_Analytics_Question_Register.md)** | Complete register of 60 business analytics questions across 9 commerce domains. |
+| **[`02_Metric_Evaluation_and_Rankings.md`](./02_Metric_Evaluation_and_Rankings.md)** | Evaluation matrix detailing the **16 Ranked Core Analytics Measures** (Best/Worst sellers, COD recovery, Conversion funnels, Retention). |
+| **[`03_Analytics_KPI_Specifications.md`](./03_Analytics_KPI_Specifications.md)** | Detailed calculation contracts for deep BI metrics (Paid vs. Total sales gap, COD collection rate, Funnel drop-offs, Customer loyalty buckets). |
+| **[`04_Wireframe_and_Visual_Layout.md`](./04_Wireframe_and_Visual_Layout.md)** | Analytics page layout wireframes, chart configurations, and merchandising leaderboards. |
+| **[`05_SQL_Calculation_Logic.md`](./05_SQL_Calculation_Logic.md)** | Production-ready SQL aggregation queries, event timestamp filtering, and timezone alignment. |
 
 ---
 
-## Core Dashboard Shape
+## Core Focus Areas
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        MERCHANT STORE OVERVIEW                         │
+│                      MERCHANT ANALYTICS DASHBOARD                      │
 ├────────────────────────────────────────────────────────────────────────┤
-│  Band 1: Business Health (Headline Results & Working Capital)          │
-│  [ Paid Sales: $4,850 ]  [ Paid Orders: 142 ]  [ Available Balance: $1,280 ]
+│  1. Revenue Velocity & Working Capital Gap                             │
+│     - Paid Sales vs. Total Booked Sales                                │
+│     - Cash on Delivery (COD) Collection & Return Rates                 │
+│     - 30-Day Daily Sales Timeline                                      │
 │                                                                        │
-│  Band 2: Immediate Operations (Urgent Action Queues)                   │
-│  [ Orders Need Decision (3) ] [ Fulfillment (5) ] [ Stock Alerts (2) ] │
+│  2. Storefront Funnel & Conversion                                     │
+│     - Visits ──► Product Views ──► Carts ──► Checkout ──► Paid Orders  │
+│     - Average Order Value (AOV) & Items per Order (UPT)                │
 │                                                                        │
-│  Band 3: Supporting Performance                                        │
-│  [ Average Order Value: $34.15 ]      [ Top Products (Top 5 SKUs) ]    │
+│  3. Merchandising Intelligence                                         │
+│     - Ranked Best Sellers ↔ Slowest Movers (Dead Stock) toggle         │
+│     - Revenue Contribution by Product Category                         │
 │                                                                        │
-│  Band 4: Conditional Onboarding                                        │
-│  [ Store Readiness Checklist (Visible only when setup is incomplete) ] │
+│  4. Customer Retention & Leakage Diagnostics                           │
+│     - New vs. Returning Customer Revenue Split                         │
+│     - Purchase Frequency Buckets (1x, 2–3x, 4+)                        │
+│     - Order Cancellations & Refunds Breakdown by Categorical Reason    │
 └────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Key Design Principles
-
-1. **Urgent Work Over Passive Numbers:** When orders need immediate decision, action items take priority over passive charts.
-2. **Authoritative Timestamping:** Revenue measures filter strictly on `orders.paid_at`, never uncaptured checkout attempts.
-3. **Decoupled Working Capital:** Available Balance is a point-in-time wallet snapshot that never changes with date filters.
-4. **Preventing Preventable Losses:** Prominent alerts for near-deadline orders and inventory stockouts protect merchant revenue.

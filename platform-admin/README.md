@@ -1,47 +1,38 @@
 # Platform Administration System — Architecture & Documentation
 
-This directory contains the complete product specification, metric governance, wireframe architecture, and operational guidelines for the **Platform Administration System** of a multi-tenant e-commerce platform.
+The **Platform Administration System** is the comprehensive operational cockpit and control plane for managing a multi-tenant e-commerce platform. 
+
+Unlike the merchant surfaces (which are scoped to individual store operations and analytics), the Platform Admin system manages the entire platform: tenant onboarding, store controls, subscription billing, multi-gateway payments, merchant payout rails, KYC verifications, background queues, and compliance audit trails.
 
 ---
 
 ## Documentation Structure
 
-| Document | Purpose |
+| Document | Description |
 |---|---|
-| **[`01_PRD_Specification.md`](./01_PRD_Specification.md)** | Comprehensive Product Requirements Document (PRD): User roles (Admin vs. Super Admin), RBAC matrix, core modules, and non-goals. |
-| **[`02_Metrics_Questions.md`](./02_Metrics_Questions.md)** | Complete register of 67 operational & executive platform questions across 9 categories. |
-| **[`03_Metric_Evaluation_Matrix.md`](./03_Metric_Evaluation_Matrix.md)** | Systematic evaluation matrix rating all 67 questions across business priorities, data readiness (L1–L4), and dashboard placement. |
-| **[`04_Dashboard_KPI_Contracts.md`](./04_Dashboard_KPI_Contracts.md)** | Production KPI decision contracts for the 15 core dashboard items (formulas, authoritative timestamps, cadences, healthy/danger bands). |
-| **[`05_Wireframe_and_Layout_Spec.md`](./05_Wireframe_and_Layout_Spec.md)** | Desktop/mobile layout wireframes, information architecture, visual hierarchy, and dynamic UI states (Healthy, Busy, Incident). |
-| **[`06_Operations_and_Compliance.md`](./06_Operations_and_Compliance.md)** | Standard Operating Procedures (SOPs), SLA targets for action queues, dispute resolution, data retention, and audit logging. |
+| **[`01_System_PRD_Specification.md`](./01_System_PRD_Specification.md)** | **Full System PRD:** Least-privilege RBAC (`Admin` vs. `Super Admin`), operational boundary, 11 core modules, workflows, and explicit non-goals. |
+| **[`02_Platform_Metrics_Evaluation.md`](./02_Platform_Metrics_Evaluation.md)** | Telemetry & Metric Evaluation Matrix: Evaluation of 67 operational platform questions, 7 adopted operating rules, and the 15 executive items. |
+| **[`03_Dashboard_Wireframe_and_States.md`](./03_Dashboard_Wireframe_and_States.md)** | Executive Dashboard Blueprint: Wireframes, 4 visual bands, 15 KPI contracts, and dynamic UI states (Healthy 🟢, Busy 🟡, Degraded 🔴). |
+| **[`04_Operations_SLAs_and_Compliance.md`](./04_Operations_SLAs_and_Compliance.md)** | Standard Operating Procedures (SOPs): Bank account KYC reviews, payout execution, store suspensions, queue SLAs, and 7-year audit retention. |
 
 ---
 
-## Core System Architecture
+## Core System Modules
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        PLATFORM ADMIN DASHBOARD                        │
+│                   INTERNAL PLATFORM ADMINISTRATION                     │
 ├────────────────────────────────────────────────────────────────────────┤
-│  Band 1: Platform Health KPIs                                          │
-│  [ Active Paid Stores ] [ Subscription MRR ] [ Platform GMV ] [ Pay % ]│
-│                                                                        │
-│  Band 2: Tenant Growth Funnel                                          │
-│  [ Store Funnel: Created ──► Activated ──► First Sale ]                │
-│                                                                        │
-│  Band 3: Action Center (SLA Queues)                                    │
-│  [ Bank KYC Verification ] [ Payout Review ] [ Support Tickets ]       │
-│                                                                        │
-│  Band 4: Governance & Integrity Chips                                  │
-│  [ System Health ] [ Ledger Audit ] [ Entitlement Check ] [ Data Fresh]│
+│  1. Overview & Telemetry: Headline KPIs, Activation Funnel, Trust Chips│
+│  2. Support & Concierge: Multi-channel intake, connected investigations│
+│  3. Store Directory: Tenant search, store configuration & suspensions  │
+│  4. User Directory: Identity controls, sessions, credential management │
+│  5. Order Issues: Stuck orders, gateway timeouts, dispute tracking     │
+│  6. Customer Payments: Gateway webhooks, intent logs, refund auditing  │
+│  7. Merchant Settlements: Payout review, ledger audit, fund execution  │
+│  8. Settlement Accounts: KYC bank account review, SLA queues           │
+│  9. Plans & Billing: Subscription tiers, contracted MRR, entitlements  │
+│ 10. Operational Health: Background jobs, worker queues, API monitoring │
+│ 11. Security & Audit: RBAC accounts, immutable append-only audit trail │
 └────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Key Design Principles
-
-1. **Least-Privilege RBAC:** Separation between everyday operational tasks (`Admin`) and financial/security mutations (`Super Admin`).
-2. **Oldest-Pending Work Prioritization:** All action queues sort by oldest pending item first with explicit SLA timers.
-3. **Double-Entry Financial Auditing:** Payouts and balance checks continuously verify against ledger accounts with automated circuit breakers.
-4. **Immutable Audit Trails:** Every administrative mutation logs the actor, timestamp, prior state, new state, and mandatory reason.

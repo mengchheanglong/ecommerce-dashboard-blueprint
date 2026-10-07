@@ -14,17 +14,15 @@ If configuring this repository on GitHub (`https://github.com/mengchheanglong/an
 
 - **Repository Title:** `E-Commerce Dashboard Architecture Blueprint`
 - **Short Description (About):**  
-  > *A battle-tested architectural blueprint, PRD specification, and metric governance template for building multi-tenant e-commerce platform admin and merchant analytics dashboards.*
+  > *A battle-tested architectural blueprint, PRD specification, and metric governance template for building multi-tenant e-commerce platform admin, merchant overview, and merchant analytics dashboards.*
 - **Topics / Tags:**  
   `ecommerce` · `analytics-dashboard` · `platform-admin` · `merchant-portal` · `product-management` · `prd-template` · `metrics-governance` · `kpi-specification` · `system-design`
 
 ---
 
-## 🧭 Overview
+## 🧭 The Three Dashboard Surfaces
 
-Building dashboards for e-commerce systems is fraught with calculation traps: naive frontend summations, timezone mismatches, uncollected cash-on-delivery misattribution, and missing operational service level agreements (SLAs).
-
-This repository serves as a **reusable documentation template and engineering blueprint** for designing, specifying, and building e-commerce dashboard surfaces. It explicitly models the two fundamental sides of commerce platforms:
+Building dashboards for e-commerce platforms requires clear separation between different operating rhythms and personas. This repository structures commerce dashboards into **three distinct surfaces**:
 
 ```text
                                   ┌────────────────────────────────┐
@@ -34,15 +32,24 @@ This repository serves as a **reusable documentation template and engineering bl
                   ┌───────────────────────────────┴──────────────────────────────┐
                   ▼                                                              ▼
 ┌──────────────────────────────────┐                           ┌──────────────────────────────────┐
-│     PLATFORM ADMINISTRATION      │                           │        MERCHANT ANALYTICS        │
-│        (Internal Operators)      │                           │          (Store Owners)          │
+│ 1. PLATFORM ADMIN SYSTEM         │                           │ 2. MERCHANT / STORE SIDE         │
+│    (Full Internal Platform)      │                           │    (Store Owners & Operators)    │
 ├──────────────────────────────────┤                           ├──────────────────────────────────┤
-│ • Platform Scale & Tenant Growth │                           │ • Valid Paid Sales & Orders      │
-│ • Subscription MRR & Billings    │                           │ • Available Withdrawable Balance │
-│ • Ecosystem GMV & Order Velocity │                           │ • Order Accept / Reject Backlog  │
-│ • Gateway Reliability & Webhooks │                           │ • Packaging & Fulfillment Queue  │
-│ • Payout Review & Bank KYC (SLA) │                           │ • Out of Stock & Low Stock Alerts│
-│ • System Telemetry & Audit Logs  │                           │ • Bestsellers & Merchandising    │
+│ Full PRD covering all 11 modules:│                           │ Two distinct dashboards:         │
+│ • Tenant & Store Directory       │                           │                                  │
+│ • Subscription MRR & Plans       │                           │ A. STORE OVERVIEW DASHBOARD      │
+│ • Gateway Reliability & Webhooks │                           │    • Daily Operational Cockpit   │
+│ • Payouts & Bank KYC Review (SLA)│                           │    • Immediate Tasks & Queues    │
+│ • Operational Health & Queues    │                           │    • Withdrawable Balance        │
+│ • Security RBAC & Audit Trails   │                           │                                  │
+│                                  │                           │ B. STORE ANALYTICS DASHBOARD     │
+│ [Enter platform-admin/]          │                           │    • Deep Business Intelligence  │
+│                                  │                           │    • Conversion Funnels & Trends │
+│                                  │                           │    • Merchandising & Retention   │
+│                                  │                           │    • Order Loss Diagnostics      │
+│                                  │                           │                                  │
+│                                  │                           │ [Enter merchant-overview/]       │
+│                                  │                           │ [Enter merchant-analytics/]      │
 └──────────────────────────────────┘                           └──────────────────────────────────┘
 ```
 
@@ -52,50 +59,55 @@ This repository serves as a **reusable documentation template and engineering bl
 
 ```text
 analytics-dashboard/
-├── platform-admin/                          # Platform-wide Administrator Dashboard & System
-│   ├── README.md                            # Platform Admin Overview & Architecture
-│   ├── 01_PRD_Specification.md              # Full PRD: RBAC roles, modules, workflows, non-goals
-│   ├── 02_Metrics_Questions.md              # 67 Platform Admin Metrics & Governance Questions
-│   ├── 03_Metric_Evaluation_Matrix.md       # Prioritized evaluation matrix & 7 operating rules
-│   ├── 04_Dashboard_KPI_Contracts.md        # Production decision contracts for 15 core items
-│   ├── 05_Wireframe_and_Layout_Spec.md      # Layout specs, visual bands, and 3 dynamic UI states
-│   └── 06_Operations_and_Compliance.md      # Operational SOPs, queue SLAs, and data retention
+├── platform-admin/                          # 1. ENTIRE PLATFORM ADMIN SYSTEM (Comprehensive PRD & Architecture)
+│   ├── README.md                            # Platform Admin System Overview
+│   ├── 01_System_PRD_Specification.md       # Full System PRD: RBAC roles, 11 modules, workflows, non-goals
+│   ├── 02_Platform_Metrics_Evaluation.md    # 67 Platform questions, 15 core items, 7 operating rules
+│   ├── 03_Dashboard_Wireframe_and_States.md # Executive platform dashboard layout & dynamic UI states
+│   └── 04_Operations_SLAs_and_Compliance.md # SOPs, KYC review, Payout execution, SLAs, 7-year audit retention
 │
-├── merchant-analytics/                      # Merchant & Store Owner Analytics Dashboard
-│   ├── README.md                            # Merchant Analytics Overview & Principles
-│   ├── 01_Metrics_Questions.md              # 60 Merchant Decision Questions
-│   ├── 02_Metric_Evaluation_Matrix.md       # Prioritized evaluation matrix for store owners
-│   ├── 03_Dashboard_KPI_Contracts.md        # Core KPI contracts (Sales, Orders, Balance, Backlog)
-│   ├── 04_Wireframe_and_Layout_Spec.md      # Screen hierarchy, wireframe layout & mobile behavior
-│   ├── 05_Calculation_Logic_and_Formulas.md # Backend SQL queries, timestamps & timezone logic
-│   └── 06_Seller_Decision_Guide.md          # Practical seller-facing decision guide & 5-minute routine
+├── merchant-overview/                       # 2. MERCHANT OVERVIEW DASHBOARD (Operational & Daily Health)
+│   ├── README.md                            # Overview Dashboard architecture & purpose
+│   ├── 01_Overview_KPI_Contracts.md         # The 9 Core Overview Items (Paid Sales, Orders, Balance, Queues, Stock)
+│   ├── 02_Wireframe_and_Layout_Spec.md      # Screen hierarchy, 4 visual bands, quick-action drawers
+│   └── 03_Daily_Operations_Guide.md         # Daily 5-minute operational workflow for store owners
 │
-├── shared/                                  # Shared Analytics Principles & Engineering Standards
+├── merchant-analytics/                      # 3. MERCHANT ANALYTICS DASHBOARD (Deep BI & Growth Intelligence)
+│   ├── README.md                            # Analytics Dashboard architecture & purpose
+│   ├── 01_Analytics_Question_Register.md    # 60 Merchant Analytics & Growth Questions
+│   ├── 02_Metric_Evaluation_and_Rankings.md # Deep evaluation matrix: 16 ranked KPIs & placement
+│   ├── 03_Analytics_KPI_Specifications.md   # Deep KPI specs (COD recovery, Funnels, Retention, Loss reasons)
+│   ├── 04_Wireframe_and_Visual_Layout.md    # Detailed analytics page layout & chart configurations
+│   └── 05_SQL_Calculation_Logic.md          # Technical queries, timestamps, timezone logic & formulas
+│
+├── shared/                                  # 4. SHARED STANDARDS & CALCULATION TRAPS
 │   ├── README.md                            # Overview of shared engineering standards
-│   ├── 01_Analytics_Audit_and_Pitfalls.md   # Catalog of calculation traps & architectural audit
-│   └── 02_Metric_Governance_Framework.md    # Data-readiness taxonomy (L1–L4) & Contract Template
+│   ├── 01_Analytics_Audit_and_Pitfalls.md   # Calculation traps (COD traps, currency, gross/net, ledger)
+│   └── 02_Metric_Governance_Framework.md    # Data-readiness taxonomy (L1–L4) & Decision Contract Template
 │
 └── .gitignore                               # Standard git ignore rules
 ```
 
 ---
 
-## 🔍 Core Highlights
+## 🔍 Surface Summaries
 
-### 1. The Metric Decision Contract
-Every dashboard card in this blueprint follows a strict contract ensuring operational accountability:
-- **Plain-language Question:** What exact question does this answer for the user?
-- **Operational Decision:** What specific action is triggered when this number moves?
-- **Authoritative Timestamp:** Exact event timestamp (e.g. `orders.paid_at`), eliminating ambiguous checkout capture times.
-- **Health Bands:** Defined healthy (🟢), warning (🟡), and danger (🔴) thresholds.
-- **Immediate Response Workflow:** Where does the operator click to resolve a flagged issue?
+### 1. Platform Administration System (`platform-admin/`)
+- **Target Audience:** Internal platform operators, super administrators, and compliance teams.
+- **Scope:** The entire multi-tenant system. Unlike merchant dashboards (which are scoped to a single store), the admin system provides the full control plane: store creation, subscription billing, customer payment logs, settlement account KYC reviews, payout authorizations, worker queue telemetry, and security audit logs.
+- **Authority:** Full PRD specification, 2-role RBAC model (`Admin` vs `Super Admin`), and SLA-governed action queues.
 
-### 2. Common Calculation Traps Avoided
-- **Multi-Currency Segregation:** Distinct currencies are never summed into an ambiguous single total.
-- **Prepaid vs. Cash-On-Delivery (COD):** Uncollected COD orders are explicitly excluded from `Paid Sales` until cash collection is authoritatively stamped.
-- **Timezone-Aligned Bucketing:** All daily charts group events based on the store's configured local calendar day rather than server UTC.
-- **Oldest-Pending Queues:** Operational backlogs sort strictly by deadline or oldest-submitted to prevent starvation of older requests.
-- **Double-Entry Reconciliation:** Balances continuously audit against double-entry ledger accounts with automated circuit breakers.
+### 2. Merchant Overview Dashboard (`merchant-overview/`)
+- **Target Audience:** Daily store owners and fulfillment staff.
+- **Operating Rhythm:** Real-time / Daily 5-minute triage.
+- **Core Questions:** *"Is paid business happening today?"* and *"What urgent work needs my attention right now?"*
+- **Key Indicators:** Paid Sales, Paid Orders, Available Balance (working capital snapshot), Orders Need Decision (accept/reject SLA countdown), Fulfillment Backlog, and Inventory Stock Alerts.
+
+### 3. Merchant Analytics Dashboard (`merchant-analytics/`)
+- **Target Audience:** Store owners, merchandisers, and growth marketers.
+- **Operating Rhythm:** Weekly / Monthly strategic review.
+- **Core Questions:** *"What are my sales trends?", "Where am I losing money?", "Which customers and products drive growth?"*
+- **Key Indicators:** Paid Sales vs Total Booked Sales gap, Cash-on-Delivery (COD) collection recovery rate, storefront visit-to-order conversion funnels, new vs returning customer split, purchase frequency buckets (`1x`, `2–3x`, `4+`), best vs worst selling products, and categorical order cancellation reasons.
 
 ---
 
@@ -103,16 +115,14 @@ Every dashboard card in this blueprint follows a strict contract ensuring operat
 
 When starting a new e-commerce platform, marketplace, or SaaS store builder:
 
-1. **Establish Product Boundaries:**  
-   Review [`platform-admin/01_PRD_Specification.md`](./platform-admin/01_PRD_Specification.md) to define which responsibilities belong to the merchant vs. the platform platform team.
-2. **Audit Data Readiness:**  
-   Use [`shared/02_Metric_Governance_Framework.md`](./shared/02_Metric_Governance_Framework.md) to classify your metrics into L1 (Current Data), L2 (Partial), L3 (Needs Rule), or L4 (Gap).
-3. **Adopt Battle-Tested Metrics:**  
-   Browse the 67 platform questions in [`platform-admin/02_Metrics_Questions.md`](./platform-admin/02_Metrics_Questions.md) and 60 merchant questions in [`merchant-analytics/01_Metrics_Questions.md`](./merchant-analytics/01_Metrics_Questions.md).
-4. **Implement Authoritative Backend Queries:**  
-   Use the SQL patterns, order state transitions, and timezone truncations in [`merchant-analytics/05_Calculation_Logic_and_Formulas.md`](./merchant-analytics/05_Calculation_Logic_and_Formulas.md).
-5. **Construct Frontend Interfaces:**  
-   Follow the visual band hierarchies and responsive wireframe specs in [`platform-admin/05_Wireframe_and_Layout_Spec.md`](./platform-admin/05_Wireframe_and_Layout_Spec.md) and [`merchant-analytics/04_Wireframe_and_Layout_Spec.md`](./merchant-analytics/04_Wireframe_and_Layout_Spec.md).
+1. **For the Entire Admin System:**  
+   Adopt the full architecture in [`platform-admin/01_System_PRD_Specification.md`](./platform-admin/01_System_PRD_Specification.md) to establish RBAC permissions, store directories, payout workflows, and SLA queues.
+2. **For the Daily Merchant Cockpit:**  
+   Implement the 9 core items and wireframe in [`merchant-overview/01_Overview_KPI_Contracts.md`](./merchant-overview/01_Overview_KPI_Contracts.md) and [`merchant-overview/02_Wireframe_and_Layout_Spec.md`](./merchant-overview/02_Wireframe_and_Layout_Spec.md).
+3. **For the In-Depth Merchant Analytics:**  
+   Implement the 16 ranked KPIs, conversion funnels, and SQL queries in [`merchant-analytics/02_Metric_Evaluation_and_Rankings.md`](./merchant-analytics/02_Metric_Evaluation_and_Rankings.md) and [`merchant-analytics/05_SQL_Calculation_Logic.md`](./merchant-analytics/05_SQL_Calculation_Logic.md).
+4. **Avoid Calculation Traps:**  
+   Follow [`shared/01_Analytics_Audit_and_Pitfalls.md`](./shared/01_Analytics_Audit_and_Pitfalls.md) to ensure correct timezone truncation, multi-currency segregation, double-entry ledger audits, and proper Cash-on-Delivery revenue recognition.
 
 ---
 

@@ -1,12 +1,10 @@
-# Platform Admin Wireframe & Layout Specification
+# Platform Admin Dashboard — Wireframes, KPIs & States
 
-This document defines the layout architecture, responsive wireframe layouts, visual hierarchy, and UI state models for the Platform Administration Dashboard.
+This document specifies the screen wireframes, KPI contracts, and dynamic UI state models for the executive Platform Administration Dashboard.
 
 ---
 
-## 1. Information Architecture & Hierarchy
-
-The Platform Admin interface is organized into a topbar header with global status chips, followed by four visual bands structured by operational importance:
+## 1. Information Architecture & Wireframe Layout
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
@@ -43,88 +41,35 @@ The Platform Admin interface is organized into a topbar header with global statu
 
 ---
 
-## 2. Desktop Layout Specification (1440px Grid)
+## 2. The 15 Core KPI Contracts
 
-### Topbar & Trust Header
-- **Left:** Platform Logo, Environment Badge (`Production`, `Staging`), Breadcrumbs.
-- **Center:** Global Search Trigger (`Cmd+K` / `Ctrl+K`) searching across Stores, Users, Order IDs, and Transaction IDs.
-- **Right:**
-  - Trust Status Chips: Interactive pills that open diagnostic drawers.
-  - Role Badge: `Super Admin` (Purple) / `Admin` (Blue).
-  - User Avatar & Session Controls.
+### Band 1: Headline Health
+1. **Active Paid Stores:** Total stores with active/grace subscription. Formula: Count of distinct stores with non-expired paid plan access. Delta: `(+ Activated - Expired)` over 30 days.
+2. **Subscription MRR & Collections:** Contracted MRR run-rate paired with cash collected in period. Includes active monthly plans + annual plans prorated.
+3. **Platform Paid Sales & Orders (GMV):** Ecosystem transaction value and distinct orders, segregated by currency. Authoritative timestamp: `orders.paid_at`.
+4. **Payment Gateway Success Rate:** Ratio of `SUCCEEDED / (SUCCEEDED + FAILED)` checkout payment intents. Segregates stale intents $> 24h$.
 
-### Band 1: Platform Health Cards (4-Column Grid)
-- **Card 1: Active Paid Stores**
-  - Large Metric: `1,248`
-  - Delta badge: `▲ +34` net change over 30 days.
-  - Sub-line: `1,180 Active | 68 Grace Period`.
-- **Card 2: Subscription MRR**
-  - Large Metric: `$34,800`
-  - Sparkline: Trailing 6-month MRR trend.
-  - Sub-line: `$31,200 collected this month`.
-- **Card 3: Platform Paid Sales & Orders (GMV)**
-  - Large Metric: `$412,650` (USD)
-  - Sub-line: `18,420 valid orders | $22.40 AOV`.
-  - Multi-currency switcher dropdown if secondary currencies exist.
-- **Card 4: Payment Success Rate**
-  - Large Metric: `94.2%`
-  - Status indicator: Green circle if $\ge 88\%$, Yellow if $82-87\%$, Red if $<82\%$.
-  - Sub-line: `4.1% declined | 1.7% timeout`.
+### Band 2: Growth & Activation
+5. **Store Activation Funnel:** Created ──► Activated ──► First Valid Paid Order. Measures time-to-value and onboarding conversion drop-offs.
 
-### Band 2: Growth & Funnel (Single Spanned Card)
-- Visual horizontal funnel with connecting arrows:
-  - Step 1: `Created (124)`
-  - Arrow with conversion rate: `71%`
-  - Step 2: `Activated (88)`
-  - Arrow with conversion rate: `59%`
-  - Step 3: `First Paid Order (52)`
-- Clicking any node navigates to the filtered Store Directory.
+### Band 3: Action Center Queues
+6. **Bank Account Verification Queue:** Pending KYC bank account reviews. SLA: 24h. Sorted oldest submitted first.
+7. **Payouts Awaiting Processing:** Pending merchant withdrawal executions. SLA: 48h. Gated to Super Admin role.
+8. **Failed Payouts Queue:** Banking transfer rejections requiring manual review and retry.
+9. **Plans Expiring Soon:** Merchant accounts inside renewal notice window (default: 7 days).
+10. **Support Cases Awaiting Triage:** Open merchant tickets with response SLA timers (< 4h).
+11. **Failed Onboarding Alert:** High-visibility conditional banner rendered when background provisioning jobs fail.
 
-### Band 3: Action Center Queues (3-Column Grid)
-Cards designed for operational action rather than passive reporting:
-- **Card 1: Bank Account Verification Queue**
-  - Pending Count badge: `14`.
-  - SLA Aging indicator: Oldest pending `19h ago` (turns yellow at 18h, red at 24h).
-  - Primary button: `Review Next Submission`.
-- **Card 2: Merchant Payout Processing Queue**
-  - Pending Count & Volume: `8 Requests ($12,450)`.
-  - SLA Aging indicator: Oldest request `38h ago` (turns yellow at 36h, red at 48h).
-  - Primary button: `Review Payouts` (Gated to Super Admin).
-- **Card 3: Support & Concierge Backlog**
-  - Open tickets count: `19`.
-  - Unassigned count: `6`.
-  - Breached tickets count: `3`.
-  - Primary button: `Triage Inbox`.
+### Band 4: Trust & Governance Chips
+12. **System Health:** Real-time API latency (< 200ms) and background worker dead-letter queue count.
+13. **Wallet-Ledger Audit:** Automated verification that merchant wallet balances equal double-entry ledger accounts. Discrepancy halts payouts.
+14. **Plan Entitlement Audit:** Daily automated scan ensuring store feature flags match current subscription tier.
+15. **Data Freshness:** Real-time badge indicating analytics pipeline synchronization lag (< 15m).
 
 ---
 
-## 3. Dashboard UI States
+## 3. Dynamic UI States
 
-The dashboard UI adapts dynamically across three operational states:
-
-### 3.1 Normal / Healthy State (🟢)
-- All trust status chips render in muted green with checkmark icons.
-- SLA queue timers show within-target durations (e.g., `< 12h`).
-- Conditional alert band is completely hidden from view.
-- Executive KPIs display smooth green trend lines.
-
-### 3.2 Busy / Backlog State (🟡)
-- One or more SLA queues approach deadline limits (e.g. Bank review $> 18h$, Payouts $> 36h$).
-- Warning chips change to amber `Due Soon`.
-- Primary action buttons in affected queues highlight to draw immediate operator focus.
-
-### 3.3 Degraded / Incident State (🔴)
-- If payment success rate drops below $82\%$, Card 4 turns red with an alert border.
-- If a ledger audit variance occurs or background workers stall, the topbar System Health chip turns red and pulses.
-- The conditional alert banner slides down across the top of the viewport with a high-contrast danger callout.
-- Automated payout execution is disabled if the Wallet-Ledger audit fails.
-
----
-
-## 4. Mobile & Responsive Behavior (< 768px)
-
-On mobile and narrow tablet screens:
-1. **Action-First Reordering:** The **Action Center** queues automatically reorder to the top of the page, placing pending tasks immediately under the operator's thumb.
-2. **Band 1 Metric Carousel / Stack:** Health KPI cards collapse into a 2x2 grid or swipeable card stack.
-3. **Sticky Urgent Banners:** Critical failure alerts stick to the top navigation header.
-4. **Touch Targets:** All queue review triggers expand to full width with a minimum 48px touch target.
+- **Healthy State (🟢):** All trust status chips show green checkmarks. Queue aging timers are within target thresholds. Conditional alert banner is hidden.
+- **Busy State (🟡):** One or more SLA queues approach deadline limits (e.g., Bank review $> 18h$, Payouts $> 36h$). Warning badges turn amber.
+- **Degraded / Incident State (🔴):** Gateway success rate drops $< 82\%$, worker dead-letter queue $> 0$, or ledger variance detected. Topbar chip pulses red, and conditional alert banner slides down across viewport.

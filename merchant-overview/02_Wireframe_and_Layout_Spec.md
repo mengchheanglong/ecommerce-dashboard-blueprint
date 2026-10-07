@@ -1,12 +1,10 @@
-# Merchant Analytics Wireframe & Layout Specification
+# Merchant Overview Wireframe & Layout Specification
 
 This document defines the layout wireframes, screen hierarchy, visual grouping logic, and responsive adaptations for the Merchant Store Overview Dashboard.
 
 ---
 
 ## 1. Information Hierarchy & Wireframe Layout
-
-The Merchant Overview is designed around a single core principle: **Separate passive performance monitoring from urgent operational work.**
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
@@ -66,7 +64,7 @@ The Merchant Overview is designed around a single core principle: **Separate pas
 The three operational queues prevent lost orders, delayed shipping, and stockouts:
 - **Orders Need Decision:**
   - Displays order number, customer name, and a visual SLA countdown timer.
-  - Hovering/clicking a row opens a quick-review slideout drawer with item summary, delivery address, and direct `Accept` / `Reject` buttons.
+  - Clicking a row opens a quick-review slideout drawer with item summary, delivery address, and direct `Accept` / `Reject` buttons.
 - **Fulfillment Backlog:**
   - Shows accepted prepaid orders awaiting courier dispatch.
   - Flags orders waiting $> 24$ hours.
