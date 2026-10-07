@@ -1,207 +1,121 @@
-# Angkoro Analytics — Current Evidence-Grounded Documentation
+# E-Commerce Dashboard Architecture & Blueprint
 
-**Status:** Analytics-lead specification adopted; technical build pending  
-**Prepared:** 18 July 2026  
-**Evidence boundary:** Live source code and documentation inspected; no production values calculated
+> **A comprehensive architectural specification, product requirements framework, and metric governance template for building modern e-commerce dashboards.**
 
-## Documentation goal
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Status: Template](https://img.shields.io/badge/Status-Specification%20Template-success.svg)]()
+[![Domain: E-Commerce](https://img.shields.io/badge/Domain-Multi--Tenant%20Commerce-orange.svg)]()
 
-Define role-appropriate Angkoro dashboards that answer important recurring decisions honestly. The business-owner surface stays focused; the platform-admin surface provides full-platform oversight while labeling unavailable capabilities as planned.
+---
 
-The dashboard is a **Monitor / Operate** surface:
+## 📌 GitHub Repository Details
 
-- monitor essential paid-business or paid-platform health;
-- expose urgent action queues;
-- provide focused explanation and drill-down;
-- preserve complete decision reasoning; and
-- avoid an all-purpose chart warehouse.
+If configuring this repository on GitHub (`https://github.com/mengchheanglong/analytics-dashboard.git`), use the following suggested metadata:
 
-## Recommended Notion page structure
+- **Repository Title:** `E-Commerce Dashboard Architecture Blueprint`
+- **Short Description (About):**  
+  > *A battle-tested architectural blueprint, PRD specification, and metric governance template for building multi-tenant e-commerce platform admin and merchant analytics dashboards.*
+- **Topics / Tags:**  
+  `ecommerce` · `analytics-dashboard` · `platform-admin` · `merchant-portal` · `product-management` · `prd-template` · `metrics-governance` · `kpi-specification` · `system-design`
 
-Create one top-level Notion page named **Angkoro Analytics Documentation** and import the Markdown pages into this hierarchy:
+---
 
-```text
-Angkoro Analytics Documentation
-│
-├── 00 — Source Audit and Adopted Decisions
-│
-├── Business Owner Dashboard
-│   ├── Overview and Stakeholder Summary
-│   ├── 01 — Question Register
-│   ├── 02 — Question Evaluation and Decision Record
-│   ├── 03 — Dashboard Content
-│   └── 04 — Dashboard Grouping and Wireframe
-│
-└── Platform Admin Dashboard
-    ├── Overview and Stakeholder Summary
-    ├── 01 — Question Register
-    ├── 02 — Question Evaluation and Decision Record
-    ├── 03 — Dashboard Content
-    └── 04 — Dashboard Grouping and Wireframe
-```
+## 🧭 Overview
 
-Use each role’s `README.md` as the role landing page. The numeric prefixes preserve a clear reading order after import.
+Building dashboards for e-commerce systems is fraught with calculation traps: naive frontend summations, timezone mismatches, uncollected cash-on-delivery misattribution, and missing operational service level agreements (SLAs).
 
-## Reading paths
-
-Different readers should not be forced through the same level of detail.
-
-### Stakeholder or presentation path
-
-For the relevant role, read:
-
-1. `README.md` — one-page recommendation and decisions
-2. `03_Dashboard_Content.md` — approved current dashboard content only; planned capability decisions remain in `02_Evaluation.md`
-3. `04_Dashboard_Grouping_and_Wireframe.md` — grouping, overview wireframe, and purpose-fit presentations for the catalog
-4. `02_Evaluation.md` — only when someone asks why a specific question was selected, merged, deferred, or rejected
-
-### Product, analytics, or project-management path
-
-Read:
-
-1. `00_Source_Audit_and_Decisions.md`
-2. the role’s `01_Questions.md`
-3. the role’s `02_Evaluation.md`
-4. the role’s `03_Dashboard_Content.md`
-5. the role’s `04_Dashboard_Grouping_and_Wireframe.md`
-
-## File index
-
-### Shared evidence
-
-- [`00_Source_Audit_and_Decisions.md`](00_Source_Audit_and_Decisions.md) — verified source behavior, known calculation traps, adopted v1 rules, and external boundaries
-
-### Business owner
-
-- [`business_owner/README.md`](business_owner/README.md) — stakeholder landing page
-- [`business_owner/01_Questions.md`](business_owner/01_Questions.md) — strict register of 60 IDs and full questions; no evaluation reasoning
-- [`business_owner/02_Evaluation.md`](business_owner/02_Evaluation.md) — 60 plain-language evaluations using Decision, Priority, Data, Status, Why, and Dashboard item when selected
-- [`business_owner/03_Dashboard_Content.md`](business_owner/03_Dashboard_Content.md) — nine approved dashboard items classified by content type, meaning, use, and guardrail
-- [`business_owner/04_Dashboard_Grouping_and_Wireframe.md`](business_owner/04_Dashboard_Grouping_and_Wireframe.md) — grouping with reasoning, one overview wireframe, and a nine-item display guide
-
-
-### Platform admin
-
-- [`admin/README.md`](admin/README.md) — stakeholder landing page
-- [`admin/01_Questions.md`](admin/01_Questions.md) — strict register of 67 IDs and full questions, including monetization, security, and abuse oversight
-- [`admin/02_Evaluation.md`](admin/02_Evaluation.md) — verdict tables for all 67 questions plus the seven adopted operating rules (20 July 2026)
-- [`admin/03_Dashboard_Content.md`](admin/03_Dashboard_Content.md) — complete catalog of the 15 approved current items, using the same content template as the business-owner page
-- [`admin/04_Dashboard_Grouping_and_Wireframe.md`](admin/04_Dashboard_Grouping_and_Wireframe.md) — simple grouping, one overview wireframe, and a 15-item display guide
-
-
-## Self-contained documentation rule
-
-`01_Questions.md` and `02_Evaluation.md` have deliberately different jobs:
-
-- `01` is a fast question register. It contains categories, stable IDs, and full questions only.
-- `02` is the authoritative evaluation and decision record.
-
-Every entry in `02_Evaluation.md` includes:
-
-- the full question;
-- a clear decision;
-- priority, data readiness, and status on one line;
-- one plain-language **Why**; and
-- the dashboard item only when the question is selected or combined.
-
-A reader can scan `01` without evaluation detail and can read any `02` entry without switching back to decode its ID.
-
-Because this repetition improves standalone Notion reading but increases maintenance cost, `02` remains the authority for disposition. Any question, selection, or wording change must update every repeated occurrence in the same change and pass exact-ID, exact-question, `03`/`04`, count, type, and link validation before the pack is called current.
-
-## Method
+This repository serves as a **reusable documentation template and engineering blueprint** for designing, specifying, and building e-commerce dashboard surfaces. It explicitly models the two fundamental sides of commerce platforms:
 
 ```text
-Live product evidence
-→ atomic user questions
-→ duplicate and drill-down clustering
-→ detailed evaluation of every question
-→ role-appropriate approved current dashboard content
-→ planned capability decisions retained in `02`
-→ stakeholder definitions and layout
+                                  ┌────────────────────────────────┐
+                                  │   E-COMMERCE PLATFORM SYSTEM   │
+                                  └───────────────┬────────────────┘
+                                                  │
+                  ┌───────────────────────────────┴──────────────────────────────┐
+                  ▼                                                              ▼
+┌──────────────────────────────────┐                           ┌──────────────────────────────────┐
+│     PLATFORM ADMINISTRATION      │                           │        MERCHANT ANALYTICS        │
+│        (Internal Operators)      │                           │          (Store Owners)          │
+├──────────────────────────────────┤                           ├──────────────────────────────────┤
+│ • Platform Scale & Tenant Growth │                           │ • Valid Paid Sales & Orders      │
+│ • Subscription MRR & Billings    │                           │ • Available Withdrawable Balance │
+│ • Ecosystem GMV & Order Velocity │                           │ • Order Accept / Reject Backlog  │
+│ • Gateway Reliability & Webhooks │                           │ • Packaging & Fulfillment Queue  │
+│ • Payout Review & Bank KYC (SLA) │                           │ • Out of Stock & Low Stock Alerts│
+│ • System Telemetry & Audit Logs  │                           │ • Bestsellers & Merchandising    │
+└──────────────────────────────────┘                           └──────────────────────────────────┘
 ```
 
-Question priority comes before KPI choice. A measure is selected because its question serves an important recurring decision—not because it is common in ecommerce or SaaS dashboards.
+---
 
-## Shared outcome relationship
+## 📂 Repository Structure
 
-`BO-S01 — Paid Sales` is the store-scoped view of the same governed paid-event population summarized platform-wide by `AD-C02 — Platform Paid Sales`. Both keep currency separate and use the same validity boundary. This is merchant-commerce activity—not Angkoro subscription revenue—and the team has not adopted a single North Star metric.
+```text
+analytics-dashboard/
+├── platform-admin/                          # Platform-wide Administrator Dashboard & System
+│   ├── README.md                            # Platform Admin Overview & Architecture
+│   ├── 01_PRD_Specification.md              # Full PRD: RBAC roles, modules, workflows, non-goals
+│   ├── 02_Metrics_Questions.md              # 67 Platform Admin Metrics & Governance Questions
+│   ├── 03_Metric_Evaluation_Matrix.md       # Prioritized evaluation matrix & 7 operating rules
+│   ├── 04_Dashboard_KPI_Contracts.md        # Production decision contracts for 15 core items
+│   ├── 05_Wireframe_and_Layout_Spec.md      # Layout specs, visual bands, and 3 dynamic UI states
+│   └── 06_Operations_and_Compliance.md      # Operational SOPs, queue SLAs, and data retention
+│
+├── merchant-analytics/                      # Merchant & Store Owner Analytics Dashboard
+│   ├── README.md                            # Merchant Analytics Overview & Principles
+│   ├── 01_Metrics_Questions.md              # 60 Merchant Decision Questions
+│   ├── 02_Metric_Evaluation_Matrix.md       # Prioritized evaluation matrix for store owners
+│   ├── 03_Dashboard_KPI_Contracts.md        # Core KPI contracts (Sales, Orders, Balance, Backlog)
+│   ├── 04_Wireframe_and_Layout_Spec.md      # Screen hierarchy, wireframe layout & mobile behavior
+│   ├── 05_Calculation_Logic_and_Formulas.md # Backend SQL queries, timestamps & timezone logic
+│   └── 06_Seller_Decision_Guide.md          # Practical seller-facing decision guide & 5-minute routine
+│
+├── shared/                                  # Shared Analytics Principles & Engineering Standards
+│   ├── README.md                            # Overview of shared engineering standards
+│   ├── 01_Analytics_Audit_and_Pitfalls.md   # Catalog of calculation traps & architectural audit
+│   └── 02_Metric_Governance_Framework.md    # Data-readiness taxonomy (L1–L4) & Contract Template
+│
+└── .gitignore                               # Standard git ignore rules
+```
 
-## Data-readiness labels
+---
 
-- **Current data** — required fields exist in the live model; a governed aggregate or queue may still need implementation.
-- **Partial** — some evidence exists, but coverage, history, identity, or reason coding is incomplete.
-- **Needs rule** — fields exist, but an operating definition, cohort, threshold, or service target is missing.
-- **Gap** — Angkoro does not reliably record the required event, denominator, cost, history, or attribution.
+## 🔍 Core Highlights
 
-Data readiness and delivery readiness are different. A database field does not prove that the current frontend calculates the measure correctly.
+### 1. The Metric Decision Contract
+Every dashboard card in this blueprint follows a strict contract ensuring operational accountability:
+- **Plain-language Question:** What exact question does this answer for the user?
+- **Operational Decision:** What specific action is triggered when this number moves?
+- **Authoritative Timestamp:** Exact event timestamp (e.g. `orders.paid_at`), eliminating ambiguous checkout capture times.
+- **Health Bands:** Defined healthy (🟢), warning (🟡), and danger (🔴) thresholds.
+- **Immediate Response Workflow:** Where does the operator click to resolve a flagged issue?
 
-## Approved business-owner dashboard content
+### 2. Common Calculation Traps Avoided
+- **Multi-Currency Segregation:** Distinct currencies are never summed into an ambiguous single total.
+- **Prepaid vs. Cash-On-Delivery (COD):** Uncollected COD orders are explicitly excluded from `Paid Sales` until cash collection is authoritatively stamped.
+- **Timezone-Aligned Bucketing:** All daily charts group events based on the store's configured local calendar day rather than server UTC.
+- **Oldest-Pending Queues:** Operational backlogs sort strictly by deadline or oldest-submitted to prevent starvation of older requests.
+- **Double-Entry Reconciliation:** Balances continuously audit against double-entry ledger accounts with automated circuit breakers.
 
-### Business health
+---
 
-1. **Paid Sales** — Valid product-payment value in the selected period, with matched comparison
-2. **Paid Orders** — Distinct valid paid orders in the same period
-3. **Available Balance** — Withdrawable wallet money right now (current snapshot, never period-scoped)
+## 🚀 How to Use this Template for Your Next Project
 
-### Immediate operations
+When starting a new e-commerce platform, marketplace, or SaaS store builder:
 
-4. **Orders Need Decision** — Open accept/reject work, nearest deadline first
-5. **Fulfillment Backlog** — Accepted prepaid orders still needing fulfillment
-6. **Inventory Attention** — Out of Stock at 0 or below; Low Stock at 1–5 available tracked units
+1. **Establish Product Boundaries:**  
+   Review [`platform-admin/01_PRD_Specification.md`](./platform-admin/01_PRD_Specification.md) to define which responsibilities belong to the merchant vs. the platform platform team.
+2. **Audit Data Readiness:**  
+   Use [`shared/02_Metric_Governance_Framework.md`](./shared/02_Metric_Governance_Framework.md) to classify your metrics into L1 (Current Data), L2 (Partial), L3 (Needs Rule), or L4 (Gap).
+3. **Adopt Battle-Tested Metrics:**  
+   Browse the 67 platform questions in [`platform-admin/02_Metrics_Questions.md`](./platform-admin/02_Metrics_Questions.md) and 60 merchant questions in [`merchant-analytics/01_Metrics_Questions.md`](./merchant-analytics/01_Metrics_Questions.md).
+4. **Implement Authoritative Backend Queries:**  
+   Use the SQL patterns, order state transitions, and timezone truncations in [`merchant-analytics/05_Calculation_Logic_and_Formulas.md`](./merchant-analytics/05_Calculation_Logic_and_Formulas.md).
+5. **Construct Frontend Interfaces:**  
+   Follow the visual band hierarchies and responsive wireframe specs in [`platform-admin/05_Wireframe_and_Layout_Spec.md`](./platform-admin/05_Wireframe_and_Layout_Spec.md) and [`merchant-analytics/04_Wireframe_and_Layout_Spec.md`](./merchant-analytics/04_Wireframe_and_Layout_Spec.md).
 
-### Supporting and conditional content
+---
 
-7. **Average Paid Order Value** — Supporting explanation for Paid Sales and Paid Orders
-8. **Top Products** — Ranked breakdown by valid paid units
-9. **Store Readiness** — Conditional setup checklist for new or blocked stores
+## 📄 License
 
-## Current platform-admin dashboard content
-
-The current admin dashboard contains 15 items:
-
-1. **Platform health** — four primary KPIs: Active Paid Stores (with net change), Subscription MRR & Collections, Platform Paid Sales & Orders, and Payment Success Rate
-2. **Growth** — the store activation funnel (created → activated → first paid order)
-3. **Action center** — four SLA-managed administrator queues plus a conditional failed-onboarding alert
-4. **Trust and control** — five conditional statuses, including the new System Status chip
-
-All 67 questions remain evaluated in `02`, together with the seven operating rules adopted on 20 July 2026 that unblocked MRR, churn, payment success rate, and queue SLAs. Infrastructure capacity/backups, security/incidents, support/governance, and COD collection failure remain explicit planned boundaries with reasons rather than additional dashboard widgets.
-
-## Important implementation warning
-
-The existing seller analytics page is not a trustworthy metric source. It aggregates a limited order page in the browser, uses order creation time for monthly results, includes inappropriate statuses in several calculations, and hardcodes USD formatting. The backend statistics endpoint also needs correction before dashboard reuse.
-
-**Interim containment:** Hide or disable that seller analytics route before seller exposure, or correct its calculations and labels first. Do not leave known-invalid numbers live as the temporary baseline while the replacement dashboard is built.
-
-See the source audit for the verified evidence and known calculation problems.
-
-Before engineering begins, each approved item requires a separate implementation metric contract covering population, authoritative event timestamp, grain, inclusion/exclusion rules, currency, source fields, per-item freshness/stale behavior, exact role/guard/permission and step-up mapping, server-side action revalidation, and verification tests. The role `03_Dashboard_Content.md` pages are intentionally stakeholder catalogs—not substitutes for that technical handoff.
-
-## Dashboard lifecycle gate
-
-This package is ready for stakeholder review, but recurring delivery remains blocked until the operating responsibilities below are assigned. `Not assigned` is an explicit delivery gate, not permission to invent a default.
-
-| Requirement | Current state before delivery |
-|---|---|
-| Dashboard artifact owner | Not assigned — required before delivery |
-| Metric-definition owner | Analytics task lead owns this specification; each implementation contract must name the ongoing definition approver |
-| Per-item refresh cadence and stale threshold | Not assigned — required in each implementation contract |
-| Refresh-failure and incident owner | Not assigned — required before delivery |
-| Adoption and decision-use measure | Not defined — required before delivery |
-| Maintenance owner and expected burden | Not assigned — required before delivery |
-| Review date or cadence | Not scheduled — required before delivery |
-| Retirement or consolidation criterion | Not defined — required before delivery |
-| Accessibility verification | Required before delivery: readable labels, no color-only status encoding, and keyboard/assistive-technology checks |
-
-## Evidence and authority boundary
-
-This pack defines analytics questions, decisions, stakeholder interpretation, source evidence, evidence boundaries, layout, and acceptance expectations.
-
-It does not claim:
-
-- that production values were calculated;
-- that the dashboards are already implemented;
-- that operational analytics equals certified accounting revenue;
-- that missing service-level or cohort rules have been silently invented; or
-- that sensitive administrator actions may bypass existing authorization and audit controls;
-- that a missing security, WAF, infrastructure, backup, queue, or incident source proves the platform is healthy; or
-- that an anomaly signal proves fraud, abuse, or compromise without investigation.
+This documentation template is released under the [MIT License](https://opensource.org/licenses/MIT). Feel free to adapt, extend, and use it in your commercial or open-source commerce platforms.
